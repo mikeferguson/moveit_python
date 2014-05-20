@@ -74,3 +74,10 @@ for synchronization at the end, this can be achieved by doing like so:
     l = PlaceLocation()
     # fill in l
     p.place("object_name" [l, ], goal_is_eef = True, support_name = "supporting_surface")
+
+## Migration from moveit_utils
+
+ * GraspingInterface renamed to PickPlaceInterface
+ * ObjectManager renamed to PlanningSceneInterface
+   * remove function is now removeCollisionObject and removeAttachedObject
+ * ArmInterface renamed to MoveGroupInterface
