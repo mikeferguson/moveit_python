@@ -1,0 +1,23 @@
+<package>
+
+  <name>moveit_python</name>
+  <version>0.1.0</version>
+  <description>
+    A pure-python interaface to the MoveIt! ROS API.
+  </description>
+  <author>Michael Ferguson</author>
+  <maintainer email="fergs@unboundedrobotics.com">Michael Ferguson</maintainer>
+  <license>BSD</license>
+  <url>http://ros.org/wiki/moveit_python</url>
+  
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <run_depend>actionlib</run_depend>
+  <run_depend>geometry_msgs</run_depend>
+  <run_depend>moveit_msgs</run_depend>
+  <run_depend>pyassimp</run_depend>
+  <run_depend>rospy</run_depend>
+  <run_depend>shape_msgs</run_depend>
+  <run_depend>tf</run_depend>
+
+</package>
