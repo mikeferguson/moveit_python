@@ -2,8 +2,8 @@
 Changelog for package moveit_python
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.2.1 (2014-05-19)
+------------------
 * fix pyassimp rosdep
 * Contributors: Michael Ferguson
 
