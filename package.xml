@@ -15,7 +15,7 @@
   <run_depend>actionlib</run_depend>
   <run_depend>geometry_msgs</run_depend>
   <run_depend>moveit_msgs</run_depend>
-  <run_depend>pyassimp</run_depend>
+  <run_depend>python-pyassimp</run_depend>
   <run_depend>rospy</run_depend>
   <run_depend>shape_msgs</run_depend>
   <run_depend>tf</run_depend>
