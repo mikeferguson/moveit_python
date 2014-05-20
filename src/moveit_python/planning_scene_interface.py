@@ -30,7 +30,7 @@ import rospy
 
 from pyassimp import pyassimp
 
-from geometry_msgs.msg import Pose
+from geometry_msgs.msg import Pose, PoseStamped
 from moveit_msgs.msg import CollisionObject, AttachedCollisionObject
 from moveit_msgs.msg import PlanningScene, PlanningSceneComponents, ObjectColor
 from moveit_msgs.srv import GetPlanningScene
