@@ -2,8 +2,8 @@
 Changelog for package moveit_python
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.2.2 (2014-05-21)
+------------------
 * pass full result in pick and place
 * Contributors: Michael Ferguson
 
