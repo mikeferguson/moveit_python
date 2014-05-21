@@ -78,6 +78,7 @@ for synchronization at the end, this can be achieved by doing like so:
 ## Migration from moveit_utils
 
  * GraspingInterface renamed to PickPlaceInterface
+   * The pick/place functions now return the entire action result, in moveit_utils they returned only the error_code. To access the error code as it used to be returned, you would use result.error_code.val
  * ObjectManager renamed to PlanningSceneInterface
    * remove function is now removeCollisionObject and removeAttachedObject
  * ArmInterface renamed to MoveGroupInterface
