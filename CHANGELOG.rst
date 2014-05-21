@@ -2,6 +2,11 @@
 Changelog for package moveit_python
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* pass full result in pick and place
+* Contributors: Michael Ferguson
+
 0.2.1 (2014-05-19)
 ------------------
 * fix pyassimp rosdep
