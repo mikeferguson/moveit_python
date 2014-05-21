@@ -36,13 +36,21 @@ class PickPlaceInterface:
     ## @param group Name of arm planning group
     ## @param ee_group Name of end effector planning group
     ## @param plan_only Should we only plan, but not execute?
-    def __init__(self, group = 'arm', ee_group = 'gripper', plan_only = False):
+    def __init__(self, group = 'arm', ee_group = 'gripper', plan_only = False, verbose = False):
+        self._verbose = verbose
         self._group = group
         self._effector = ee_group
+        if self._verbose:
+            rospy.loginfo("Connecting to pickup action...")
         self._pick_action = actionlib.SimpleActionClient('pickup', PickupAction)
         self._pick_action.wait_for_server()
+        if self._verbose:
+            rospy.loginfo("...connected")
+            rospy.loginfo("Connecting to place action...")
         self._place_action = actionlib.SimpleActionClient('place', PlaceAction)
         self._place_action.wait_for_server()
+        if self._verbose:
+            rospy.loginfo("...connected")
         self._plan_only = plan_only
 
     ## @brief Plan and grasp something
@@ -53,7 +61,6 @@ class PickPlaceInterface:
     def pickup(self, name, grasps, support_name = 'table',
                allow_gripper_support_collision = True,
                allowed_touch_objects = list()):
-        """ This will try to pick up an object. """
         g = PickupGoal()
         g.target_name = name
         g.group_name = self._group
@@ -71,7 +78,7 @@ class PickPlaceInterface:
         g.planning_options.plan_only = self._plan_only
         self._pick_action.send_goal(g)
         self._pick_action.wait_for_result()
-        return self._pick_action.get_result().error_code.val
+        return self._pick_action.get_result()
 
     ## @brief Plan and grasp something
     ## @param name Name of the object to grasp
@@ -100,5 +107,5 @@ class PickPlaceInterface:
         g.planning_options.plan_only = self._plan_only
         self._place_action.send_goal(g)
         self._place_action.wait_for_result()
-        return self._place_action.get_result().error_code.val
+        return self._place_action.get_result()
 
