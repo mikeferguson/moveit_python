@@ -16,11 +16,13 @@ There are three interfaces currently:
 
 The MoveGroupInterface is quite easy to use:
 
-    import rospy
-    from moveit_python import *
+```python
+import rospy
+from moveit_python import *
 
-    rospy.init_node("moveit_py")
-    g = MoveGroupInterface("planning_group_name", "base_link")
+rospy.init_node("moveit_py")
+g = MoveGroupInterface("planning_group_name", "base_link")
+```
 
 Obviously, you might need different values for base_link, and your planning group
 is probably not called "planning_group_name".
@@ -31,49 +33,55 @@ The PlanningSceneInterface allows you to easily insert and remove objects from
 the MoveIt! planning scene. Unlike the moveit_commander, this module tracks when
 objects are added removed, and will re-attempt add/remove if a message is loss.
 
-    import rospy
-    from moveit_python import *
+```python
+import rospy
+from moveit_python import *
 
-    rospy.init_node("moveit_py")
-    # create a planning scene interface, provide name of root link
-    p = PlanningSceneInterface("base_link")
+rospy.init_node("moveit_py")
+# create a planning scene interface, provide name of root link
+p = PlanningSceneInterface("base_link")
 
-    # add a cube of 0.1m size, at [1, 0, 0.5] in the base_link frame
-    p.addCube("my_cube", 0.1, 1, 0, 0.5)
+# add a cube of 0.1m size, at [1, 0, 0.5] in the base_link frame
+p.addCube("my_cube", 0.1, 1, 0, 0.5)
 
-    # do something
+# do something
 
-    # remove the cube
-    p.removeCollisionObject("my_cube")
+# remove the cube
+p.removeCollisionObject("my_cube")
+```
 
 Each time an object is added or removed, the planning scene interface will
 wait until it recieves confirmation that the request has been processed by MoveIt!
 If sending a large number of objects, it would be more efficient to only wait
 for synchronization at the end, this can be achieved by doing like so:
 
-    p.addCube("my_cube", 0.1, 1, 0, 0.5, wait=False)
-    p.addCube("my_other_cube", 0.1, 2, 0, 0.5, wait=False)
-    p.waitForSync()
+```python
+p.addCube("my_cube", 0.1, 1, 0, 0.5, wait=False)
+p.addCube("my_other_cube", 0.1, 2, 0, 0.5, wait=False)
+p.waitForSync()
+```
 
 ## PickPlaceInterface
 
-    import rospy
-    from moveit_python import *
-    from moveit_msgs.msg import Grasp, PlaceLocation
+```python
+import rospy
+from moveit_python import *
+from moveit_msgs.msg import Grasp, PlaceLocation
 
-    rospy.init_node("moveit_py")
-    # provide arm group and gripper group names
-    # also takes a third parameter "plan_only" which defaults to False
-    p = PickPlaceInterface("arm", "gripper")
+rospy.init_node("moveit_py")
+# provide arm group and gripper group names
+# also takes a third parameter "plan_only" which defaults to False
+p = PickPlaceInterface("arm", "gripper")
 
-    g = Grasp()
-    # fill in g
-    # setup object named object_name using PlanningSceneInterface
-    p.pickup("object_name", [g, ], support_name = "supporting_surface")
+g = Grasp()
+# fill in g
+# setup object named object_name using PlanningSceneInterface
+p.pickup("object_name", [g, ], support_name = "supporting_surface")
 
-    l = PlaceLocation()
-    # fill in l
-    p.place("object_name" [l, ], goal_is_eef = True, support_name = "supporting_surface")
+l = PlaceLocation()
+# fill in l
+p.place("object_name" [l, ], goal_is_eef = True, support_name = "supporting_surface")
+```
 
 ## Migration from moveit_utils
 
