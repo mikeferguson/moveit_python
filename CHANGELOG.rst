@@ -2,8 +2,8 @@
 Changelog for package moveit_python
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.2.3 (2014-05-26)
+------------------
 * fix bug in mesh generation
 * Contributors: Michael Ferguson
 
