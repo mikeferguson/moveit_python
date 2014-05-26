@@ -2,6 +2,11 @@
 Changelog for package moveit_python
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* fix bug in mesh generation
+* Contributors: Michael Ferguson
+
 0.2.2 (2014-05-21)
 ------------------
 * pass full result in pick and place
