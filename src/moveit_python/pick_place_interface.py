@@ -27,6 +27,7 @@
 
 import rospy
 import actionlib
+from moveit_msgs.msg import MoveItErrorCodes
 from moveit_msgs.msg import PickupAction, PickupGoal, PlaceAction, PlaceGoal
 
 ## @brief Simple interface to pick and place actions
@@ -108,4 +109,73 @@ class PickPlaceInterface:
         self._place_action.send_goal(g)
         self._place_action.wait_for_result()
         return self._place_action.get_result()
+
+    ## Common usage pattern
+    ## TODO document
+    def pick_with_retry(self, name, grasps, retries=5, scene = None,
+                        support_name = "table", allow_gripper_support_collision = True,
+                        allowed_touch_objects = list()):
+        if self._verbose:
+            rospy.loginfo("Beginning to pick.")
+        while retries > 0:
+            retries += -1
+            pick_result = self.pickup(name, grasps, support_name=support_name)
+            if pick_result.error_code.val == MoveItErrorCodes.SUCCESS:
+                rospy.loginfo("Pick succeeded")
+                return [True, pick_result]
+            elif pick_result.error_code.val == MoveItErrorCodes.PLANNING_FAILED:
+                rospy.logerr("Pick failed in the planning stage, try again...")
+                rospy.sleep(0.5)  # short sleep to try and let state settle a bit?
+                continue
+            elif scene and \
+                pick_result.error_code.val == MoveItErrorCodes.CONTROL_FAILED or \
+                pick_result.error_code.val == MoveItErrorCodes.MOTION_PLAN_INVALIDATED_BY_ENVIRONMENT_CHANGE or \
+                pick_result.error_code.val == MoveItErrorCodes.TIMED_OUT:
+                rospy.logerr("Pick failed during execution, attempting to cleanup.")
+                if name in scene.getKnownAttachedObjects():
+                    rospy.loginfo("Pick managed to grab object, retreat must have failed, continuing anyways")
+                    return [True, pick_result]
+                else:
+                    rospy.loginfo("Pick did not grab object, try again...")
+                    continue
+            else:
+                rospy.logerr("Pick failed with error code: %d. Will retry..." % pick_result.error_code.val)
+                continue
+        rospy.logerr("Pick failed, and all retries are used")
+        return [False, pick_result]
+
+    ## Common usage pattern
+    ## TODO document
+    def place_with_retry(self, name, locations, retries=5, scene = None,
+                         support_name = "table", allow_gripper_support_collision = True,
+                         allowed_touch_objects = list(),
+                         goal_is_eef = False):
+        if self._verbose:
+            rospy.loginfo("Beginning to place.")
+        while retries > 0:
+            retries += -1
+            place_result = self.place(name, locations, support_name, allow_gripper_support_collision, allowed_touch_objects, goal_is_eef)
+            if place_result.error_code.val == MoveItErrorCodes.SUCCESS:
+                rospy.loginfo("Place succeeded")
+                return [True, place_result]
+            elif place_result.error_code.val == MoveItErrorCodes.PLANNING_FAILED:
+                rospy.logerr("Place failed in the planning stage, try again...")
+                rospy.sleep(0.5)  # short sleep to try and let state settle a bit?
+                continue
+            elif scene and \
+                 place_result.error_code.val == MoveItErrorCodes.CONTROL_FAILED or \
+                 place_result.error_code.val == MoveItErrorCodes.MOTION_PLAN_INVALIDATED_BY_ENVIRONMENT_CHANGE or \
+                 place_result.error_code.val == MoveItErrorCodes.TIMED_OUT:
+                rospy.logerr("Place failed during execution, attempting to cleanup.")
+                if name in scene.getKnownAttachedObjects():
+                    rospy.loginfo("Place did not place object, approach must have failed, will retry...")
+                    continue
+                else:
+                    rospy.loginfo("Object no longer in gripper, must be placed, continuing...")
+                    return [True, place_result]
+            else:
+                rospy.logerr("Place failed with error code: %d. Will retry..." % place_result.error_code.val)
+                continue
+        rospy.logerr("Place failed, and all retries are used")
+        return [False, place_result]
 
