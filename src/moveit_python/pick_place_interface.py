@@ -37,18 +37,18 @@ class PickPlaceInterface:
     ## @param group Name of arm planning group
     ## @param ee_group Name of end effector planning group
     ## @param plan_only Should we only plan, but not execute?
-    def __init__(self, group = 'arm', ee_group = 'gripper', plan_only = False, verbose = False):
+    def __init__(self, group = "arm", ee_group = "gripper", plan_only = False, verbose = False):
         self._verbose = verbose
         self._group = group
         self._effector = ee_group
         if self._verbose:
             rospy.loginfo("Connecting to pickup action...")
-        self._pick_action = actionlib.SimpleActionClient('pickup', PickupAction)
+        self._pick_action = actionlib.SimpleActionClient("pickup", PickupAction)
         self._pick_action.wait_for_server()
         if self._verbose:
             rospy.loginfo("...connected")
             rospy.loginfo("Connecting to place action...")
-        self._place_action = actionlib.SimpleActionClient('place', PlaceAction)
+        self._place_action = actionlib.SimpleActionClient("place", PlaceAction)
         self._place_action.wait_for_server()
         if self._verbose:
             rospy.loginfo("...connected")
@@ -59,7 +59,7 @@ class PickPlaceInterface:
     ## @param grasps Grasps to try (moveit_msgs/Grasp)
     ## @param support_name Name of the support surface
     ## @returns moveit_msgs/PickupResult
-    def pickup(self, name, grasps, support_name = 'table',
+    def pickup(self, name, grasps, support_name = "",
                allow_gripper_support_collision = True,
                allowed_touch_objects = list()):
         g = PickupGoal()
@@ -88,7 +88,7 @@ class PickPlaceInterface:
     ## @param goal_is_eef Set to true if the place goal is for the
     ##        end effector frame, default is object frame.
     ## @returns moveit_msgs/PlaceResult
-    def place(self, name, locations, support_name = 'table',
+    def place(self, name, locations, support_name = "",
               allow_gripper_support_collision = True,
               allowed_touch_objects = list(),
               goal_is_eef = False):
@@ -113,7 +113,7 @@ class PickPlaceInterface:
     ## Common usage pattern
     ## TODO document
     def pick_with_retry(self, name, grasps, retries=5, scene = None,
-                        support_name = "table", allow_gripper_support_collision = True,
+                        support_name = "", allow_gripper_support_collision = True,
                         allowed_touch_objects = list()):
         if self._verbose:
             rospy.loginfo("Beginning to pick.")
@@ -147,7 +147,7 @@ class PickPlaceInterface:
     ## Common usage pattern
     ## TODO document
     def place_with_retry(self, name, locations, retries=5, scene = None,
-                         support_name = "table", allow_gripper_support_collision = True,
+                         support_name = "", allow_gripper_support_collision = True,
                          allowed_touch_objects = list(),
                          goal_is_eef = False):
         if self._verbose:
