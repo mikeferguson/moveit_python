@@ -6,4 +6,6 @@ find_package(catkin)
 catkin_package()
 catkin_python_setup()
 
-# TODO: add install directives
+install(PROGRAMS scripts/list_objects.py scripts/remove_objects.py
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
