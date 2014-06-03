@@ -69,7 +69,7 @@ class PlanningSceneInterface:
                                  PlanningSceneComponents.WORLD_OBJECT_GEOMETRY + \
                                  PlanningSceneComponents.ROBOT_STATE_ATTACHED_OBJECTS
                 scene = self._service(req)
-                self.sceneCb(scene.scene)
+                self.sceneCb(scene.scene, initial = True)
             except rospy.ServiceException as e:
                 print('Failed to get initial planning scene, results may be wonky: %s' % e)
 
@@ -308,9 +308,8 @@ class PlanningSceneInterface:
         o.weight = weight
         return o
 
-
     ## @brief Update the object lists from a PlanningScene message
-    def sceneCb(self, msg):
+    def sceneCb(self, msg, initial = False):
         """ Recieve updates from move_group. """
         self._mutex.acquire()
         for obj in msg.world.collision_objects:
@@ -318,6 +317,9 @@ class PlanningSceneInterface:
                 if obj.operation == obj.ADD:
                     self._collision.append(obj.id)
                     rospy.logdebug('ObjectManager: Added Collision Object "%s"' % obj.id)
+                    if initial:
+                        # this is our initial planning scene, hold onto each object
+                        self._objects[obj.id] = obj
                 elif obj.operation == obj.REMOVE:
                     self._collision.remove(obj.id)
                     rospy.logdebug('ObjectManager: Removed Collision Object "%s"' % obj.id)
@@ -327,6 +329,9 @@ class PlanningSceneInterface:
         for obj in msg.robot_state.attached_collision_objects:
             rospy.logdebug('ObjectManager: attached collision objects includes "%s"' % obj.object.id)
             self._attached.append(obj.object.id)
+            if initial:
+                # this is our initial planning scene, hold onto each object
+                self._attached_objects[obj.object.id] = obj
         self._mutex.release()
 
     ## @brief Get a list of names of collision objects
