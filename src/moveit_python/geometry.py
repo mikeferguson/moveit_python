@@ -25,7 +25,8 @@
 # ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-# Helpers for dealing with geometry_msgs and transformations in Python
+## @package moveit_python.geometry Helpers for performing geometric
+##          transformations on geometry_msgs messages
 
 from geometry_msgs.msg import *
 from tf.transformations import *

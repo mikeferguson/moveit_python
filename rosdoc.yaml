@@ -1,0 +1,5 @@
+ - builder: doxygen
+   name: MoveIt! Python
+   exclude_patterns: 'setup.py */scripts/*.py'
+   file_patterns: '*.py'
+
