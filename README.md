@@ -90,3 +90,4 @@ p.place("object_name" [l, ], goal_is_eef = True, support_name = "supporting_surf
  * ObjectManager renamed to PlanningSceneInterface
    * remove function is now removeCollisionObject and removeAttachedObject
  * ArmInterface renamed to MoveGroupInterface
+
