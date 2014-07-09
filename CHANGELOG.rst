@@ -2,8 +2,8 @@
 Changelog for package moveit_python
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.2.5 (2014-07-09)
+------------------
 * add scripts for dumping/loading planning scene
 * documentation cleanup
 * Contributors: Michael Ferguson
