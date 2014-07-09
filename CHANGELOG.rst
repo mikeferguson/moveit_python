@@ -2,6 +2,12 @@
 Changelog for package moveit_python
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* add scripts for dumping/loading planning scene
+* documentation cleanup
+* Contributors: Michael Ferguson
+
 0.2.4 (2014-06-03)
 ------------------
 * add list and remove object scripts, closes `#2 <https://github.com/mikeferguson/moveit_python/issues/2>`_
