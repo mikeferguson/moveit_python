@@ -6,6 +6,12 @@ find_package(catkin)
 catkin_package()
 catkin_python_setup()
 
-install(PROGRAMS scripts/list_objects.py scripts/remove_objects.py
-  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+install(
+  PROGRAMS
+    scripts/dump_planning_scene.py
+    scripts/list_objects.py
+    scripts/load_planning_scene.py
+    scripts/remove_objects.py
+  DESTINATION
+    ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
