@@ -59,6 +59,8 @@ class MoveGroupInterface:
         # 2. fill in start_state
         if start_state:
             g.request.start_state = start_state
+        else:
+            g.request.start_state.is_diff = True
         # 3. fill in goal_constraints
         c1 = Constraints()
         for i in range(len(joints)):
@@ -96,6 +98,7 @@ class MoveGroupInterface:
 
         # 1. fill in workspace_parameters
         # 2. fill in start_state
+        g.request.start_state.is_diff = True
         # 3. fill in goal_constraints
         c1 = Constraints()
 
@@ -135,6 +138,9 @@ class MoveGroupInterface:
         g.request.allowed_planning_time = 15.0
         # TODO: fill in
         # g.planning_options.planning_scene_diff.allowed_collision_matrix
+
+        g.planning_options.planning_scene_diff.is_diff = True
+        g.planning_options.planning_scene_diff.robot_state.is_diff = True
         g.planning_options.plan_only = self.plan_only
         g.planning_options.look_around = False
         g.planning_options.replan = False
