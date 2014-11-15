@@ -52,15 +52,27 @@ class MoveGroupInterface:
             self._listener = listener
         self.plan_only = plan_only
         self.planner_id = None
+        self.planning_time = 15.0
 
-    def moveToJointPosition(self, joints, positions, tolerance = 0.01, start_state = None):
+    ## @brief Move the arm to set of joint position goals
+    def moveToJointPosition(self, joints, positions, tolerance = 0.01, **kwargs):
+        # Check arguments
+        supported_args = ["start_state", "planner_id", "planning_time", "plan_only"]
+        for arg in kwargs.keys():
+            if not arg in supported_args:
+                rospy.loginfo("moveToJointPosition: unsupported argument: %s" % arg)
+
+        # Create goal
         g = MoveGroupGoal()
+
         # 1. fill in workspace_parameters
+
         # 2. fill in start_state
-        if start_state:
-            g.request.start_state = start_state
-        else:
+        try:
+            g.request.start_state = kwargs["start_state"]
+        except KeyError:
             g.request.start_state.is_diff = True
+
         # 3. fill in goal_constraints
         c1 = Constraints()
         for i in range(len(joints)):
@@ -71,35 +83,70 @@ class MoveGroupInterface:
             c1.joint_constraints[i].tolerance_below = tolerance
             c1.joint_constraints[i].weight = 1.0
         g.request.goal_constraints.append(c1)
+
         # 4. fill in path constraints
+
         # 5. fill in trajectory constraints
+
         # 6. fill in planner id
-        if self.planner_id:
-            g.request.planner_id = self.planner_id
+        try:
+            g.request.planner_id = kwargs["planner_id"]
+        except KeyError:
+            if self.planner_id:
+                g.request.planner_id = self.planner_id
+
         # 7. fill in group name
         g.request.group_name = self._group
+
         # 8. fill in number of planning attempts
         g.request.num_planning_attempts = 1
+
         # 9. fill in allowed planning time
-        g.request.allowed_planning_time = 15.0
-        # TODO: fill in
-        # g.planning_options.planning_scene_diff.allowed_collision_matrix
-        g.planning_options.plan_only = self.plan_only
+        try:
+            g.reqest.allowed_planning_time = kwargs["planning_time"]
+        except KeyError:
+            g.request.allowed_planning_time = self.planning_time
+
+        # 10. fill in planning options diff
+        g.planning_options.planning_scene_diff.is_diff = True
+        g.planning_options.planning_scene_diff.robot_state.is_diff = True
+
+        # 11. fill in planning options plan only
+        try:
+            g.planning_options.plan_only = kwargs["plan_only"]
+        except:
+            g.planning_options.plan_only = self.plan_only
+
+        # 12. fill in other planning options
         g.planning_options.look_around = False
         g.planning_options.replan = False
+
+        # 13. send goal
         self._action.send_goal(g)
         self._action.wait_for_result()
         return self._action.get_result()
 
-    def moveToPose(self, pose_stamped, gripper_frame, tolerance = 0.01):
-        """ Move the arm, based on a goal pose_stamped for the end effector. """
+    ## @brief Move the arm, based on a goal pose_stamped for the end effector.
+    def moveToPose(self, pose_stamped, gripper_frame, tolerance = 0.01, **kwargs):
+        # Check arguments
+        supported_args = ["start_state", "planner_id", "planning_time", "plan_only"]
+        for arg in kwargs.keys():
+            if not arg in supported_args:
+                rospy.loginfo("moveToJointPosition: unsupported argument: %s" % arg)
+
+        # Create goal
         g = MoveGroupGoal()
         pose_transformed = self._listener.transformPose(self._fixed_frame, pose_stamped)
 
-        # 1. fill in workspace_parameters
-        # 2. fill in start_state
-        g.request.start_state.is_diff = True
-        # 3. fill in goal_constraints
+        # 1. fill in request workspace_parameters
+
+        # 2. fill in request start_state
+        try:
+            g.request.start_state = kwargs["start_state"]
+        except KeyError:
+            g.request.start_state.is_diff = True
+
+        # 3. fill in request goal_constraints
         c1 = Constraints()
 
         c1.position_constraints.append(PositionConstraint())
@@ -125,26 +172,44 @@ class MoveGroupInterface:
 
         g.request.goal_constraints.append(c1)
 
-        # 4. fill in path constraints
-        # 5. fill in trajectory constraints
-        # 6. fill in planner id
-        if self.planner_id:
-            g.request.planner_id = self.planner_id
-        # 7. fill in group name
-        g.request.group_name = self._group
-        # 8. fill in number of planning attempts
-        g.request.num_planning_attempts = 1
-        # 9. fill in allowed planning time
-        g.request.allowed_planning_time = 15.0
-        # TODO: fill in
-        # g.planning_options.planning_scene_diff.allowed_collision_matrix
+        # 4. fill in request path constraints
 
+        # 5. fill in request trajectory constraints
+
+        # 6. fill in request planner id
+        try:
+            g.request.planner_id = kwargs["planner_id"]
+        except KeyError:
+            if self.planner_id:
+                g.request.planner_id = self.planner_id
+
+        # 7. fill in request group name
+        g.request.group_name = self._group
+
+        # 8. fill in request number of planning attempts
+        g.request.num_planning_attempts = 1
+
+        # 9. fill in request allowed planning time
+        try:
+            g.reqest.allowed_planning_time = kwargs["planning_time"]
+        except KeyError:
+            g.request.allowed_planning_time = self.planning_time
+
+        # 10. fill in planning options diff
         g.planning_options.planning_scene_diff.is_diff = True
         g.planning_options.planning_scene_diff.robot_state.is_diff = True
-        g.planning_options.plan_only = self.plan_only
+
+        # 11. fill in planning options plan only
+        try:
+            g.planning_options.plan_only = kwargs["plan_only"]
+        except:
+            g.planning_options.plan_only = self.plan_only
+
+        # 12. fill in other planning options
         g.planning_options.look_around = False
         g.planning_options.replan = False
 
+        # 13. send goal
         self._action.send_goal(g)
         self._action.wait_for_result()
         return self._action.get_result()
@@ -154,3 +219,6 @@ class MoveGroupInterface:
     def setPlannerId(self, planner_id):
         self.planner_id = str(planner_id)
 
+    ## @brief Set default planning time to be used for future planning request.
+    def setPlanningTime(self, time):
+        self.planning_time = time
