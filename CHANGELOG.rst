@@ -2,6 +2,12 @@
 Changelog for package moveit_python
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* use kw_args for group interface, add a number of args supported
+* a couple of fixes for is_diff
+* Contributors: Michael Ferguson
+
 0.2.5 (2014-07-09)
 ------------------
 * add scripts for dumping/loading planning scene
