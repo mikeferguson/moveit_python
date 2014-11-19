@@ -35,6 +35,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Remove objects from the MoveIt planning scene.")
     parser.add_argument("name", nargs="?", help="Name of object to remove")
     parser.add_argument("--all", help="Remove all objects.", action="store_true")
+    parser.add_argument("--attached", help="Remove an attached object.", action="store_true")
     args = parser.parse_args()
 
     if args.all:
@@ -48,7 +49,10 @@ if __name__ == "__main__":
         rospy.init_node("remove_objects")
         scene = PlanningSceneInterface("base_link")
         print("Removing %s" % args.name)
-        scene.removeCollisionObject(args.name)
+        if args.attached:
+            scene.removeAttachedObject(args.name)
+        else:
+            scene.removeCollisionObject(args.name)
     else:
         parser.print_help()
 
