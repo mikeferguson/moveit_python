@@ -2,8 +2,8 @@
 Changelog for package moveit_python
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.2.7 (2014-11-19)
+------------------
 * enable removing attached objects
 * Contributors: Michael Ferguson
 
