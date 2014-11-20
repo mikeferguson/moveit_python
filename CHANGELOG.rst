@@ -2,6 +2,11 @@
 Changelog for package moveit_python
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* enable removing attached objects
+* Contributors: Michael Ferguson
+
 0.2.6 (2014-11-16)
 ------------------
 * use kw_args for group interface, add a number of args supported
