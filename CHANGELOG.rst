@@ -2,8 +2,8 @@
 Changelog for package moveit_python
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.2.8 (2015-03-21)
+------------------
 * expose num_attempts through kw_args
 * Contributors: Michael Ferguson
 
