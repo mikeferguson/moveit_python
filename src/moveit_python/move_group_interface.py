@@ -99,7 +99,10 @@ class MoveGroupInterface:
         g.request.group_name = self._group
 
         # 8. fill in number of planning attempts
-        g.request.num_planning_attempts = 1
+        try:
+            g.request.num_planning_attempts = kwargs["num_attempts"]
+        except KeyError:
+            g.request.num_planning_attempts = 1
 
         # 9. fill in allowed planning time
         try:
@@ -187,7 +190,10 @@ class MoveGroupInterface:
         g.request.group_name = self._group
 
         # 8. fill in request number of planning attempts
-        g.request.num_planning_attempts = 1
+        try:
+            g.request.num_planning_attempts = kwargs["num_attempts"]
+        except KeyError:
+            g.request.num_planning_attempts = 1
 
         # 9. fill in request allowed planning time
         try:
