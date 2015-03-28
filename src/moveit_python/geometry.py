@@ -97,3 +97,12 @@ def rotate_pose_msg_by_euler_angles(pose, r, p, y):
     transform = quaternion_matrix(quaternion_from_euler(r, p, y))
     return pose_msg_from_matrix(concatenate_matrices(initial, transform))
 
+## @brief Rotate a geometry_msgs/Pose
+## @param pose The pose to rotate
+## @param r The roll
+## @param p The pitch
+## @param y The yaw
+def rotate_pose_msg_about_origin(pose, r, p, y):
+    initial = matrix_from_pose_msg(pose)
+    transform = quaternion_matrix(quaternion_from_euler(r, p, y))
+    return pose_msg_from_matrix(concatenate_matrices(transform, initial))
