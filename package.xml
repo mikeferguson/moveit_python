@@ -1,7 +1,7 @@
 <package>
 
   <name>moveit_python</name>
-  <version>0.2.8</version>
+  <version>0.2.9</version>
   <description>
     A pure-python interaface to the MoveIt! ROS API.
   </description>

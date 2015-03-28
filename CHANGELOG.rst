@@ -2,8 +2,8 @@
 Changelog for package moveit_python
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.2.9 (2015-03-28)
+------------------
 * add rotate_pose_msg_about_origin
 * Contributors: Michael Ferguson
 
