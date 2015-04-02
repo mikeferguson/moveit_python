@@ -76,6 +76,14 @@ class PlanningSceneInterface:
         # subscribe to planning scene
         rospy.Subscriber('move_group/monitored_planning_scene', PlanningScene, self.sceneCb)
 
+    ## @brief Clear the planning scene of all objects
+    def clear(self):
+        for name in self.getKnownCollisionObjects():
+            self.removeCollisionObject(name, False)
+        for name in scene.getKnownAttachedObjects():
+            self.removeAttachedObject(name, False)
+        self.waitForSync()
+
     ## @brief Make a mesh collision object
     ## @param name Name of the object
     ## @param pose A geometry_msgs/Pose for the object
