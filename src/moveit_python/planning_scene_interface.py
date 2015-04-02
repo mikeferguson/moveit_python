@@ -80,7 +80,7 @@ class PlanningSceneInterface:
     def clear(self):
         for name in self.getKnownCollisionObjects():
             self.removeCollisionObject(name, False)
-        for name in scene.getKnownAttachedObjects():
+        for name in self.getKnownAttachedObjects():
             self.removeAttachedObject(name, False)
         self.waitForSync()
 
