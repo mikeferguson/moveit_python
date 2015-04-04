@@ -53,6 +53,7 @@ class PickPlaceInterface:
         if self._verbose:
             rospy.loginfo("...connected")
         self._plan_only = plan_only
+        self.allowed_planning_time = 30.0
 
     ## @brief Plan and grasp something
     ## @param name Name of the object to grasp
@@ -73,7 +74,7 @@ class PickPlaceInterface:
         #g.path_constraints = ??
         #g.planner_id = ??
         g.allowed_touch_objects = allowed_touch_objects
-        g.allowed_planning_time = 30.0
+        g.allowed_planning_time = self.allowed_planning_time
         g.planning_options.planning_scene_diff.is_diff = True
         g.planning_options.planning_scene_diff.robot_state.is_diff = True
         g.planning_options.plan_only = self._plan_only
@@ -102,7 +103,7 @@ class PickPlaceInterface:
         #g.path_constraints = ??
         #g.planner_id = ??
         g.allowed_touch_objects = allowed_touch_objects
-        g.allowed_planning_time = 30.0
+        g.allowed_planning_time = self.allowed_planning_time
         g.planning_options.planning_scene_diff.is_diff = True
         g.planning_options.planning_scene_diff.robot_state.is_diff = True
         g.planning_options.plan_only = self._plan_only
