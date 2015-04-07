@@ -2,8 +2,8 @@
 Changelog for package moveit_python
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.2.10 (2015-04-06)
+-------------------
 * implement kwargs for pick&place interface
 * add max_velocity_scaling_factor as kwarg
 * allow overriding allowed_planning_time
