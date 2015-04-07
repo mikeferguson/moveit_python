@@ -57,7 +57,11 @@ class MoveGroupInterface:
     ## @brief Move the arm to set of joint position goals
     def moveToJointPosition(self, joints, positions, tolerance = 0.01, **kwargs):
         # Check arguments
-        supported_args = ["start_state", "planner_id", "planning_time", "plan_only"]
+        supported_args = ("max_velocity_scaling_factor",
+                          "planner_id",
+                          "planning_time",
+                          "plan_only",
+                          "start_state")
         for arg in kwargs.keys():
             if not arg in supported_args:
                 rospy.loginfo("moveToJointPosition: unsupported argument: %s" % arg)
@@ -110,6 +114,12 @@ class MoveGroupInterface:
         except KeyError:
             g.request.allowed_planning_time = self.planning_time
 
+        # Fill in velocity scaling factor
+        try:
+            g.reqest.max_velocity_scaling_factor = kwargs["max_velocity_scaling_factor"]
+        except KeyError:
+            pass  # do not fill in at all
+
         # 10. fill in planning options diff
         g.planning_options.planning_scene_diff.is_diff = True
         g.planning_options.planning_scene_diff.robot_state.is_diff = True
@@ -132,7 +142,11 @@ class MoveGroupInterface:
     ## @brief Move the arm, based on a goal pose_stamped for the end effector.
     def moveToPose(self, pose_stamped, gripper_frame, tolerance = 0.01, **kwargs):
         # Check arguments
-        supported_args = ["start_state", "planner_id", "planning_time", "plan_only"]
+        supported_args = ("max_velocity_scaling_factor",
+                          "planner_id",
+                          "planning_time",
+                          "plan_only",
+                          "start_state")
         for arg in kwargs.keys():
             if not arg in supported_args:
                 rospy.loginfo("moveToJointPosition: unsupported argument: %s" % arg)
@@ -200,6 +214,12 @@ class MoveGroupInterface:
             g.reqest.allowed_planning_time = kwargs["planning_time"]
         except KeyError:
             g.request.allowed_planning_time = self.planning_time
+
+        # Fill in velocity scaling factor
+        try:
+            g.reqest.max_velocity_scaling_factor = kwargs["max_velocity_scaling_factor"]
+        except KeyError:
+            pass  # do not fill in at all
 
         # 10. fill in planning options diff
         g.planning_options.planning_scene_diff.is_diff = True
