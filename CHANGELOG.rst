@@ -2,6 +2,15 @@
 Changelog for package moveit_python
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* implement kwargs for pick&place interface
+* add max_velocity_scaling_factor as kwarg
+* allow overriding allowed_planning_time
+* add FakeGroupInterface
+* add clear() method to planning scene interface
+* Contributors: Michael Ferguson
+
 0.2.9 (2015-03-28)
 ------------------
 * add rotate_pose_msg_about_origin
