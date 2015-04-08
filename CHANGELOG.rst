@@ -2,6 +2,11 @@
 Changelog for package moveit_python
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* fix spelling issue in velocity scaling factor
+* Contributors: Michael Ferguson
+
 0.2.10 (2015-04-06)
 -------------------
 * implement kwargs for pick&place interface
