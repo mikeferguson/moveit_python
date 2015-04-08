@@ -110,13 +110,13 @@ class MoveGroupInterface:
 
         # 9. fill in allowed planning time
         try:
-            g.reqest.allowed_planning_time = kwargs["planning_time"]
+            g.request.allowed_planning_time = kwargs["planning_time"]
         except KeyError:
             g.request.allowed_planning_time = self.planning_time
 
         # Fill in velocity scaling factor
         try:
-            g.reqest.max_velocity_scaling_factor = kwargs["max_velocity_scaling_factor"]
+            g.request.max_velocity_scaling_factor = kwargs["max_velocity_scaling_factor"]
         except KeyError:
             pass  # do not fill in at all
 
