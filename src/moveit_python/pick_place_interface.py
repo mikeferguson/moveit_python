@@ -54,6 +54,7 @@ class PickPlaceInterface:
         if self._verbose:
             rospy.loginfo("...connected")
         self._plan_only = plan_only
+        self.planner_id = None
         self.allowed_planning_time = 30.0
 
     ## @brief Plan and grasp something
