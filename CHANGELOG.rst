@@ -2,8 +2,8 @@
 Changelog for package moveit_python
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.2.12 (2015-04-11)
+-------------------
 * fixup planner id
 * Contributors: Michael Ferguson
 
