@@ -189,12 +189,6 @@ class PickPlaceInterface:
         except KeyError:
             g.allow_gripper_support_collision = True
 
-        # 7. What links are part of the "gripper" (and can contact the object/surface)
-        try:
-            g.attached_object_touch_links = kwargs["attached_object_touch_links"]
-        except KeyError:
-            g.attached_object_touch_links = list() # empty list = use all links of end-effector
-
         # 8. Fill in path_constraints
 
         # 9. Fill in planner id
