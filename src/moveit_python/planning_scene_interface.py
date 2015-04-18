@@ -52,10 +52,14 @@ class PlanningSceneInterface:
 
         # track the attached and collision objects
         self._mutex = thread.allocate_lock()
+        # these are updated based what the planning scene actually contains
         self._attached = list()
         self._collision = list()
+        # these are updated based on internal state
         self._objects = dict()
         self._attached_objects = dict()
+        self._removed = dict()
+        self._attached_removed = dict()
         self._colors = dict()
 
         # get the initial planning scene
@@ -278,6 +282,7 @@ class PlanningSceneInterface:
 
         try:
             del self._objects[name]
+            self._removed[name] = o
         except KeyError:
             pass
 
@@ -297,6 +302,7 @@ class PlanningSceneInterface:
 
         try:
             del self._attached_objects[name]
+            self._attached_removed[name] = o
         except KeyError:
             pass
 
@@ -330,6 +336,7 @@ class PlanningSceneInterface:
                         self._objects[obj.id] = obj
                 elif obj.operation == obj.REMOVE:
                     self._collision.remove(obj.id)
+                    self._removed.pop(obj.id, None)
                     rospy.logdebug('ObjectManager: Removed Collision Object "%s"' % obj.id)
             except ValueError:
                 pass
@@ -364,12 +371,12 @@ class PlanningSceneInterface:
             sync = True
             # delete objects that should be gone
             for name in self._collision:
-                if name not in self._objects.keys():
+                if name in self._removed.keys():
                     # should be removed, is not
                     self.removeCollisionObject(name, False)
                     sync = False
             for name in self._attached:
-                if name not in self._attached_objects.keys():
+                if name in self._attached_removed.keys():
                     # should be removed, is not
                     self.removeAttachedObject(name, False)
                     sync = False
