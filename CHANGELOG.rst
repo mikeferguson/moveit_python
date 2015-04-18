@@ -2,6 +2,12 @@
 Changelog for package moveit_python
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* better handle removal of objects
+* place has no attached_object_touch_links
+* Contributors: Michael Ferguson
+
 0.2.12 (2015-04-11)
 -------------------
 * fixup planner id
