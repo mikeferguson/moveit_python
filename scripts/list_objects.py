@@ -28,7 +28,7 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 import rospy
-from moveit_python import *
+from moveit_python import PlanningSceneInterface
 
 if __name__ == "__main__":
     rospy.init_node("list_objects")

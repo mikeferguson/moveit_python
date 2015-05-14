@@ -41,14 +41,20 @@ from shape_msgs.msg import MeshTriangle, Mesh, SolidPrimitive, Plane
 ## @param init_from_service Whether to initialize our list of objects by calling the service
 ##            NOTE: this requires that said service be in the move_group launch file, which
 ##            is not the default from the setup assistant.
-class PlanningSceneInterface:
-    def __init__(self, frame, init_from_service = True):
+class PlanningSceneInterface(object):
+    def __init__(self, frame, init_from_service=True):
         self._fixed_frame = frame
 
         # publisher to send objects to MoveIt
-        self._pub = rospy.Publisher('collision_object', CollisionObject, queue_size = 10)
-        self._attached_pub = rospy.Publisher('attached_collision_object', AttachedCollisionObject, queue_size = 10)
-        self._scene_pub = rospy.Publisher('planning_scene', PlanningScene, queue_size = 10)
+        self._pub = rospy.Publisher('collision_object',
+                                    CollisionObject,
+                                    queue_size=10)
+        self._attached_pub = rospy.Publisher('attached_collision_object',
+                                             AttachedCollisionObject,
+                                             queue_size=10)
+        self._scene_pub = rospy.Publisher('planning_scene',
+                                          PlanningScene,
+                                          queue_size=10)
 
         # track the attached and collision objects
         self._mutex = thread.allocate_lock()
@@ -66,19 +72,23 @@ class PlanningSceneInterface:
         if init_from_service:
             rospy.loginfo('Waiting for get_planning_scene')
             rospy.wait_for_service('get_planning_scene')
-            self._service = rospy.ServiceProxy('get_planning_scene', GetPlanningScene)
+            self._service = rospy.ServiceProxy('get_planning_scene',
+                                               GetPlanningScene)
             try:
                 req = PlanningSceneComponents()
-                req.components = PlanningSceneComponents.WORLD_OBJECT_NAMES + \
-                                 PlanningSceneComponents.WORLD_OBJECT_GEOMETRY + \
-                                 PlanningSceneComponents.ROBOT_STATE_ATTACHED_OBJECTS
+                req.components = sum([
+                    PlanningSceneComponents.WORLD_OBJECT_NAMES,
+                    PlanningSceneComponents.WORLD_OBJECT_GEOMETRY,
+                    PlanningSceneComponents.ROBOT_STATE_ATTACHED_OBJECTS])
                 scene = self._service(req)
-                self.sceneCb(scene.scene, initial = True)
+                self.sceneCb(scene.scene, initial=True)
             except rospy.ServiceException as e:
-                print('Failed to get initial planning scene, results may be wonky: %s' % e)
+                rospy.logerr('Failed to get initial planning scene, results may be wonky: %s', e)
 
         # subscribe to planning scene
-        rospy.Subscriber('move_group/monitored_planning_scene', PlanningScene, self.sceneCb)
+        rospy.Subscriber('move_group/monitored_planning_scene',
+                         PlanningScene,
+                         self.sceneCb)
 
     ## @brief Clear the planning scene of all objects
     def clear(self):
@@ -102,7 +112,9 @@ class PlanningSceneInterface:
         for face in scene.meshes[0].faces:
             triangle = MeshTriangle()
             if len(face.indices) == 3:
-                triangle.vertex_indices = [face.indices[0], face.indices[1], face.indices[2]]
+                triangle.vertex_indices = [face.indices[0],
+                                           face.indices[1],
+                                           face.indices[2]]
             mesh.triangles.append(triangle)
         for vertex in scene.meshes[0].vertices:
             point = Point()
@@ -138,7 +150,8 @@ class PlanningSceneInterface:
         return o
 
     ## @brief Make an attachedCollisionObject
-    def makeAttached(self, link_name, obj, touch_links, detach_posture, weight):
+    def makeAttached(self, link_name, obj, touch_links, detach_posture,
+                     weight):
         o = AttachedCollisionObject()
         o.link_name = link_name
         o.object = obj
@@ -155,7 +168,7 @@ class PlanningSceneInterface:
     ## @param filename The mesh file to load
     ## @param wait When true, we wait for planning scene to actually update,
     ##             this provides immunity against lost messages.
-    def addMesh(self, name, pose, filename, wait = True):
+    def addMesh(self, name, pose, filename, wait=True):
         o = self.makeMesh(name, pose, filename)
         self._objects[name] = o
         self._pub.publish(o)
@@ -168,12 +181,12 @@ class PlanningSceneInterface:
     ## @param filename The mesh file to load
     ## @param wait When true, we wait for planning scene to actually update,
     ##             this provides immunity against lost messages.
-    def attachMesh(self, name, pose, filename,
-                   link_name, touch_links = None, detach_posture = None, weight = 0.0,
-                   wait = True):
+    def attachMesh(self, name, pose, filename, link_name, touch_links=None,
+                   detach_posture=None, weight=0.0, wait=True):
         o = self.makeMesh(name, pose, filename)
         o.header.frame_id = link_name
-        a = self.makeAttached(link_name, o, touch_links, detach_posture, weight)
+        a = self.makeAttached(link_name, o, touch_links, detach_posture,
+                              weight)
         self._attached_objects[name] = a
         self._attached_pub.publish(a)
         if wait:
@@ -182,7 +195,7 @@ class PlanningSceneInterface:
     ## @brief Insert a solid primitive into planning scene
     ## @param wait When true, we wait for planning scene to actually update,
     ##             this provides immunity against lost messages.
-    def addSolidPrimitive(self, name, solid, pose, wait = True):
+    def addSolidPrimitive(self, name, solid, pose, wait=True):
         o = self.makeSolidPrimitive(name, solid, pose)
         self._objects[name] = o
         self._pub.publish(o)
@@ -192,7 +205,7 @@ class PlanningSceneInterface:
     ## @brief Insert new cylinder into planning scene
     ## @param wait When true, we wait for planning scene to actually update,
     ##             this provides immunity against lost messages.
-    def addCylinder(self, name, height, radius, x, y, z, wait = True):
+    def addCylinder(self, name, height, radius, x, y, z, wait=True):
         s = SolidPrimitive()
         s.dimensions = [height, radius]
         s.type = s.CYLINDER
@@ -216,7 +229,7 @@ class PlanningSceneInterface:
     ## @param z The z position in link_name frame
     ## @param wait When true, we wait for planning scene to actually update,
     ##             this provides immunity against lost messages.
-    def addBox(self, name, size_x, size_y, size_z, x, y, z, wait = True):
+    def addBox(self, name, size_x, size_y, size_z, x, y, z, wait=True):
         s = SolidPrimitive()
         s.dimensions = [size_x, size_y, size_z]
         s.type = s.BOX
@@ -242,9 +255,9 @@ class PlanningSceneInterface:
     ## @param touch_links Names of robot links that can touch this object
     ## @param wait When true, we wait for planning scene to actually update,
     ##             this provides immunity against lost messages.
-    def attachBox(self, name, size_x, size_y, size_z, x, y, z,
-                   link_name, touch_links = None, detach_posture = None, weight = 0.0,
-                   wait = True):
+    def attachBox(self, name, size_x, size_y, size_z, x, y, z, link_name,
+                  touch_links=None, detach_posture=None, weight=0.0,
+                  wait=True):
         s = SolidPrimitive()
         s.dimensions = [size_x, size_y, size_z]
         s.type = s.BOX
@@ -266,13 +279,13 @@ class PlanningSceneInterface:
     ## @brief Insert new cube to planning scene
     ## @param wait When true, we wait for planning scene to actually update,
     ##             this provides immunity against lost messages.
-    def addCube(self, name, size, x, y, z, wait = True):
+    def addCube(self, name, size, x, y, z, wait=True):
         self.addBox(name, size, size, size, x, y, z, wait)
 
     ## @brief Send message to remove object
     ## @param wait When true, we wait for planning scene to actually update,
     ##             this provides immunity against lost messages.
-    def removeCollisionObject(self, name, wait = True):
+    def removeCollisionObject(self, name, wait=True):
         """ Remove an object. """
         o = CollisionObject()
         o.header.stamp = rospy.Time.now()
@@ -293,7 +306,7 @@ class PlanningSceneInterface:
     ## @brief Send message to remove object
     ## @param wait When true, we wait for planning scene to actually update,
     ##             this provides immunity against lost messages.
-    def removeAttachedObject(self, name, wait = True):
+    def removeAttachedObject(self, name, wait=True):
         """ Remove an attached object. """
         o = AttachedCollisionObject()
         o.object.operation = CollisionObject.REMOVE
@@ -310,39 +323,30 @@ class PlanningSceneInterface:
         if wait:
             self.waitForSync()
 
-    ## @brief Make an attachedCollisionObject
-    def makeAttached(self, link_name, obj, touch_links, detach_posture, weight):
-        o = AttachedCollisionObject()
-        o.link_name = link_name
-        o.object = obj
-        if touch_links:
-            o.touch_links = touch_links
-        if detach_posture:
-            o.detach_posture = detach_posture
-        o.weight = weight
-        return o
-
     ## @brief Update the object lists from a PlanningScene message
-    def sceneCb(self, msg, initial = False):
+    def sceneCb(self, msg, initial=False):
         """ Recieve updates from move_group. """
         self._mutex.acquire()
         for obj in msg.world.collision_objects:
             try:
                 if obj.operation == obj.ADD:
                     self._collision.append(obj.id)
-                    rospy.logdebug('ObjectManager: Added Collision Object "%s"' % obj.id)
+                    rospy.logdebug('ObjectManager: Added Collision Obj "%s"',
+                                   obj.id)
                     if initial:
                         # this is our initial planning scene, hold onto each object
                         self._objects[obj.id] = obj
                 elif obj.operation == obj.REMOVE:
                     self._collision.remove(obj.id)
                     self._removed.pop(obj.id, None)
-                    rospy.logdebug('ObjectManager: Removed Collision Object "%s"' % obj.id)
+                    rospy.logdebug('ObjectManager: Removed Collision Obj "%s"',
+                                   obj.id)
             except ValueError:
                 pass
         self._attached = list()
         for obj in msg.robot_state.attached_collision_objects:
-            rospy.logdebug('ObjectManager: attached collision objects includes "%s"' % obj.object.id)
+            rospy.logdebug('ObjectManager: attached collision Obj "%s"',
+                           obj.object.id)
             self._attached.append(obj.object.id)
             if initial:
                 # this is our initial planning scene, hold onto each object
@@ -364,7 +368,7 @@ class PlanningSceneInterface:
         return l
 
     ## @brief Wait for sync
-    def waitForSync(self, max_time = 2.0):
+    def waitForSync(self, max_time=2.0):
         sync = False
         t = rospy.Time.now()
         while not sync:
@@ -397,7 +401,7 @@ class PlanningSceneInterface:
             rospy.sleep(0.1)
 
     ## @brief Set the color of an object
-    def setColor(self, name, r, g, b, a = 0.9):
+    def setColor(self, name, r, g, b, a=0.9):
         # Create our color
         color = ObjectColor()
         color.id = name

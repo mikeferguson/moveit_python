@@ -32,24 +32,30 @@ from moveit_msgs.msg import MoveItErrorCodes
 from moveit_msgs.msg import PickupAction, PickupGoal, PlaceAction, PlaceGoal
 
 ## @brief Simple interface to pick and place actions
-class PickPlaceInterface:
+class PickPlaceInterface(object):
 
     ## @brief Create a grasp manager, connect actions
     ## @param group Name of arm planning group
     ## @param ee_group Name of end effector planning group
     ## @param plan_only Should we only plan, but not execute?
-    def __init__(self, group = "arm", ee_group = "gripper", plan_only = False, verbose = False):
+    def __init__(self,
+                 group="arm",
+                 ee_group="gripper",
+                 plan_only=False,
+                 verbose=False):
         self._verbose = verbose
         self._group = group
         self._effector = ee_group
         if self._verbose:
             rospy.loginfo("Connecting to pickup action...")
-        self._pick_action = actionlib.SimpleActionClient("pickup", PickupAction)
+        self._pick_action = actionlib.SimpleActionClient("pickup",
+                                                         PickupAction)
         self._pick_action.wait_for_server()
         if self._verbose:
             rospy.loginfo("...connected")
             rospy.loginfo("Connecting to place action...")
-        self._place_action = actionlib.SimpleActionClient("place", PlaceAction)
+        self._place_action = actionlib.SimpleActionClient("place",
+                                                          PlaceAction)
         self._place_action.wait_for_server()
         if self._verbose:
             rospy.loginfo("...connected")
@@ -72,7 +78,7 @@ class PickPlaceInterface:
                           "support_name")
         for arg in kwargs.keys():
             if not arg in supported_args:
-                rospy.loginfo("pickup: unsupported argument: %s" % arg)
+                rospy.loginfo("pickup: unsupported argument: %s", arg)
 
         # Create goal
         g = PickupGoal()
@@ -157,7 +163,7 @@ class PickPlaceInterface:
                           "support_name")
         for arg in kwargs.keys():
             if not arg in supported_args:
-                rospy.loginfo("place: unsupported argument: %s" % arg)
+                rospy.loginfo("place: unsupported argument: %s", arg)
 
         # Create goal
         g = PlaceGoal()
@@ -221,7 +227,7 @@ class PickPlaceInterface:
 
     ## Common usage pattern
     ## TODO document
-    def pick_with_retry(self, name, grasps, retries=5, scene = None, **kwargs):
+    def pick_with_retry(self, name, grasps, retries=5, scene=None, **kwargs):
         if self._verbose:
             rospy.loginfo("Beginning to pick.")
         while retries > 0:
@@ -246,14 +252,20 @@ class PickPlaceInterface:
                     rospy.loginfo("Pick did not grab object, try again...")
                     continue
             else:
-                rospy.logerr("Pick failed with error code: %d. Will retry..." % pick_result.error_code.val)
+                rospy.logerr("Pick failed with error code: %d. Will retry...",
+                             pick_result.error_code.val)
                 continue
         rospy.logerr("Pick failed, and all retries are used")
         return [False, pick_result]
 
     ## Common usage pattern
     ## TODO document
-    def place_with_retry(self, name, locations, retries=5, scene = None, **kwargs):
+    def place_with_retry(self,
+                         name,
+                         locations,
+                         retries=5,
+                         scene=None,
+                         **kwargs):
         if self._verbose:
             rospy.loginfo("Beginning to place.")
         while retries > 0:
@@ -263,8 +275,8 @@ class PickPlaceInterface:
                 rospy.loginfo("Place succeeded")
                 return [True, place_result]
             elif place_result.error_code.val == MoveItErrorCodes.PLANNING_FAILED:
-                rospy.logerr("Place failed in the planning stage, try again...")
-                rospy.sleep(0.5)  # short sleep to try and let state settle a bit?
+                rospy.logerr("Place failed in planning stage, try again...")
+                rospy.sleep(0.5)  # short sleep to let state settle a bit?
                 continue
             elif scene and \
                  place_result.error_code.val == MoveItErrorCodes.CONTROL_FAILED or \
@@ -278,7 +290,8 @@ class PickPlaceInterface:
                     rospy.loginfo("Object no longer in gripper, must be placed, continuing...")
                     return [True, place_result]
             else:
-                rospy.logerr("Place failed with error code: %d. Will retry..." % place_result.error_code.val)
+                rospy.logerr("Place failed with error code: %d. Will retry...",
+                             place_result.error_code.val)
                 continue
         rospy.logerr("Place failed, and all retries are used")
         return [False, place_result]
