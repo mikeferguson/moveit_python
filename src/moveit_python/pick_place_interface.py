@@ -63,12 +63,18 @@ class PickPlaceInterface(object):
         self.planner_id = None
         self.allowed_planning_time = 30.0
 
+    def get_pick_action(self):
+        return self._pick_action
+
+    def get_place_action(self):
+        return self._place_action
+
     ## @brief Plan and grasp something
     ## @param name Name of the object to grasp
     ## @param grasps Grasps to try (moveit_msgs/Grasp)
     ## @param support_name Name of the support surface
     ## @returns moveit_msgs/PickupResult
-    def pickup(self, name, grasps, **kwargs):
+    def pickup(self, name, grasps, wait=True, **kwargs):
         # Check arguments
         supported_args = ("allow_gripper_support_collision",
                           "allowed_touch_objects",
@@ -142,8 +148,11 @@ class PickPlaceInterface(object):
         g.planning_options.plan_only = self._plan_only
 
         self._pick_action.send_goal(g)
-        self._pick_action.wait_for_result()
-        return self._pick_action.get_result()
+        if wait:
+            self._pick_action.wait_for_result()
+            return self._pick_action.get_result()
+        else:
+            return None
 
     ## @brief Plan and grasp something
     ## @param name Name of the object to grasp
@@ -152,7 +161,7 @@ class PickPlaceInterface(object):
     ## @param goal_is_eef Set to true if the place goal is for the
     ##        end effector frame, default is object frame.
     ## @returns moveit_msgs/PlaceResult
-    def place(self, name, locations, **kwargs):
+    def place(self, name, locations, wait=True, **kwargs):
         # Check arguments
         supported_args = ("allow_gripper_support_collision",
                           "allowed_touch_objects",
@@ -222,8 +231,11 @@ class PickPlaceInterface(object):
         g.planning_options.plan_only = self._plan_only
 
         self._place_action.send_goal(g)
-        self._place_action.wait_for_result()
-        return self._place_action.get_result()
+        if wait:
+            self._place_action.wait_for_result()
+            return self._place_action.get_result()
+        else:
+            return None
 
     ## Common usage pattern
     ## TODO document

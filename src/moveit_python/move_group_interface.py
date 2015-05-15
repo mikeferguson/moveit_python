@@ -56,11 +56,15 @@ class MoveGroupInterface(object):
         self.planner_id = None
         self.planning_time = 15.0
 
+    def get_move_action(self):
+        return self._action
+
     ## @brief Move the arm to set of joint position goals
     def moveToJointPosition(self,
                             joints,
                             positions,
                             tolerance=0.01,
+                            wait=True,
                             **kwargs):
         # Check arguments
         supported_args = ("max_velocity_scaling_factor",
@@ -143,14 +147,18 @@ class MoveGroupInterface(object):
 
         # 13. send goal
         self._action.send_goal(g)
-        self._action.wait_for_result()
-        return self._action.get_result()
+        if wait:
+            self._action.wait_for_result()
+            return self._action.get_result()
+        else:
+            return None
 
     ## @brief Move the arm, based on a goal pose_stamped for the end effector.
     def moveToPose(self,
                    pose_stamped,
                    gripper_frame,
                    tolerance=0.01,
+                   wait=True,
                    **kwargs):
         # Check arguments
         supported_args = ("max_velocity_scaling_factor",
@@ -249,8 +257,11 @@ class MoveGroupInterface(object):
 
         # 13. send goal
         self._action.send_goal(g)
-        self._action.wait_for_result()
-        return self._action.get_result()
+        if wait:
+            self._action.wait_for_result()
+            return self._action.get_result()
+        else:
+            return None
 
     ## @brief Sets the planner_id used for all future planning requests.
     ## @param planner_id The string for the planner id, set to None to clear
