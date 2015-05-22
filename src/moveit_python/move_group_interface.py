@@ -33,18 +33,20 @@ from moveit_msgs.msg import MoveGroupAction, MoveGroupGoal
 from moveit_msgs.msg import Constraints, JointConstraint, PositionConstraint, OrientationConstraint, BoundingVolume
 from shape_msgs.msg import SolidPrimitive
 
+
 ## @brief Pure python interface to move_group action
-class MoveGroupInterface:
+class MoveGroupInterface(object):
 
     ## @brief Constructor for this utility
     ## @param group Name of the MoveIt! group to command
     ## @param frame Name of the fixed frame in which planning happens
     ## @param listener A TF listener instance (optional, will create a new one if None)
     ## @param plan_only Should we only plan, but not execute?
-    def __init__(self, group, frame, listener = None, plan_only = False):
+    def __init__(self, group, frame, listener=None, plan_only=False):
         self._group = group
         self._fixed_frame = frame
-        self._action = actionlib.SimpleActionClient('move_group', MoveGroupAction)
+        self._action = actionlib.SimpleActionClient('move_group',
+                                                    MoveGroupAction)
         self._action.wait_for_server()
         if listener == None:
             self._listener = TransformListener()
@@ -54,8 +56,16 @@ class MoveGroupInterface:
         self.planner_id = None
         self.planning_time = 15.0
 
+    def get_move_action(self):
+        return self._action
+
     ## @brief Move the arm to set of joint position goals
-    def moveToJointPosition(self, joints, positions, tolerance = 0.01, **kwargs):
+    def moveToJointPosition(self,
+                            joints,
+                            positions,
+                            tolerance=0.01,
+                            wait=True,
+                            **kwargs):
         # Check arguments
         supported_args = ("max_velocity_scaling_factor",
                           "planner_id",
@@ -64,7 +74,8 @@ class MoveGroupInterface:
                           "start_state")
         for arg in kwargs.keys():
             if not arg in supported_args:
-                rospy.loginfo("moveToJointPosition: unsupported argument: %s" % arg)
+                rospy.loginfo("moveToJointPosition: unsupported argument: %s",
+                              arg)
 
         # Create goal
         g = MoveGroupGoal()
@@ -127,7 +138,7 @@ class MoveGroupInterface:
         # 11. fill in planning options plan only
         try:
             g.planning_options.plan_only = kwargs["plan_only"]
-        except:
+        except KeyError:
             g.planning_options.plan_only = self.plan_only
 
         # 12. fill in other planning options
@@ -136,11 +147,19 @@ class MoveGroupInterface:
 
         # 13. send goal
         self._action.send_goal(g)
-        self._action.wait_for_result()
-        return self._action.get_result()
+        if wait:
+            self._action.wait_for_result()
+            return self._action.get_result()
+        else:
+            return None
 
     ## @brief Move the arm, based on a goal pose_stamped for the end effector.
-    def moveToPose(self, pose_stamped, gripper_frame, tolerance = 0.01, **kwargs):
+    def moveToPose(self,
+                   pose_stamped,
+                   gripper_frame,
+                   tolerance=0.01,
+                   wait=True,
+                   **kwargs):
         # Check arguments
         supported_args = ("max_velocity_scaling_factor",
                           "planner_id",
@@ -149,7 +168,8 @@ class MoveGroupInterface:
                           "start_state")
         for arg in kwargs.keys():
             if not arg in supported_args:
-                rospy.loginfo("moveToJointPosition: unsupported argument: %s" % arg)
+                rospy.loginfo("moveToJointPosition: unsupported argument: %s",
+                              arg)
 
         # Create goal
         g = MoveGroupGoal()
@@ -228,7 +248,7 @@ class MoveGroupInterface:
         # 11. fill in planning options plan only
         try:
             g.planning_options.plan_only = kwargs["plan_only"]
-        except:
+        except KeyError:
             g.planning_options.plan_only = self.plan_only
 
         # 12. fill in other planning options
@@ -237,8 +257,11 @@ class MoveGroupInterface:
 
         # 13. send goal
         self._action.send_goal(g)
-        self._action.wait_for_result()
-        return self._action.get_result()
+        if wait:
+            self._action.wait_for_result()
+            return self._action.get_result()
+        else:
+            return None
 
     ## @brief Sets the planner_id used for all future planning requests.
     ## @param planner_id The string for the planner id, set to None to clear

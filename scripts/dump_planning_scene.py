@@ -29,7 +29,8 @@
 
 import sys, pickle
 import rospy
-from moveit_python.planning_scene_interface import *
+from moveit_python.planning_scene_interface import (GetPlanningScene,
+                                                    PlanningSceneComponents)
 
 if __name__ == "__main__":
     rospy.init_node("dump_planning_scene")

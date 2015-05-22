@@ -29,11 +29,14 @@
 
 import sys, pickle
 import rospy
-from moveit_python.planning_scene_interface import *
+from moveit_python.planning_scene_interface import PlanningScene
 
 if __name__ == "__main__":
     rospy.init_node("dump_planning_scene")
-    pub = rospy.Publisher('planning_scene', PlanningScene, queue_size = 10, latch = True)
+    pub = rospy.Publisher('planning_scene',
+                          PlanningScene,
+                          queue_size=10,
+                          latch=True)
 
     if len(sys.argv) > 1:
         filename = sys.argv[1]
