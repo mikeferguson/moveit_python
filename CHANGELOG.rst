@@ -2,6 +2,12 @@
 Changelog for package moveit_python
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* add no-wait behavior for move, pick, and place
+* updates for compliance with PEP8
+* Contributors: Aaron Blasdel, Michael Ferguson
+
 0.2.13 (2015-04-18)
 -------------------
 * better handle removal of objects
