@@ -69,6 +69,7 @@ class MoveGroupInterface(object):
         # Check arguments
         supported_args = ("max_velocity_scaling_factor",
                           "planner_id",
+                          "planning_scene_diff",
                           "planning_time",
                           "plan_only",
                           "start_state")
@@ -132,8 +133,11 @@ class MoveGroupInterface(object):
             pass  # do not fill in at all
 
         # 10. fill in planning options diff
-        g.planning_options.planning_scene_diff.is_diff = True
-        g.planning_options.planning_scene_diff.robot_state.is_diff = True
+        try:
+            g.planning_options.planning_scene_diff = kwargs["planning_scene_diff"]
+        except KeyError:
+            g.planning_options.planning_scene_diff.is_diff = True
+            g.planning_options.planning_scene_diff.robot_state.is_diff = True
 
         # 11. fill in planning options plan only
         try:

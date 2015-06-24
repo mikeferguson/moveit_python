@@ -80,6 +80,7 @@ class PickPlaceInterface(object):
                           "allowed_touch_objects",
                           "plan_only",
                           "planner_id",
+                          "planning_scene_diff",
                           "planning_time",
                           "support_name")
         for arg in kwargs.keys():
@@ -143,8 +144,11 @@ class PickPlaceInterface(object):
             g.allowed_planning_time = self.allowed_planning_time
 
         # 13. Planning options
-        g.planning_options.planning_scene_diff.is_diff = True
-        g.planning_options.planning_scene_diff.robot_state.is_diff = True
+        try:
+            g.planning_options.planning_scene_diff = kwargs["planning_scene_diff"]
+        except KeyError:
+            g.planning_options.planning_scene_diff.is_diff = True
+            g.planning_options.planning_scene_diff.robot_state.is_diff = True
         g.planning_options.plan_only = self._plan_only
 
         self._pick_action.send_goal(g)
@@ -168,6 +172,7 @@ class PickPlaceInterface(object):
                           "goal_is_eef",
                           "plan_only",
                           "planner_id",
+                          "planning_scene_diff",
                           "planning_time",
                           "support_name")
         for arg in kwargs.keys():
@@ -226,8 +231,11 @@ class PickPlaceInterface(object):
             g.allowed_planning_time = self.allowed_planning_time
 
         # 12. Planning options
-        g.planning_options.planning_scene_diff.is_diff = True
-        g.planning_options.planning_scene_diff.robot_state.is_diff = True
+        try:
+            g.planning_options.planning_scene_diff = kwargs["planning_scene_diff"]
+        except KeyError:
+            g.planning_options.planning_scene_diff.is_diff = True
+            g.planning_options.planning_scene_diff.robot_state.is_diff = True
         g.planning_options.plan_only = self._plan_only
 
         self._place_action.send_goal(g)
