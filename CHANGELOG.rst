@@ -2,8 +2,8 @@
 Changelog for package moveit_python
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.2.15 (2015-08-20)
+-------------------
 * Fix types in move_group_interface
 * add planning_scene_diff as optional field
 * Contributors: Michael Ferguson, Mikkel Rath Pedersen
