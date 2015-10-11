@@ -172,7 +172,7 @@ class MoveGroupInterface(object):
                           "start_state")
         for arg in kwargs.keys():
             if not arg in supported_args:
-                rospy.loginfo("moveToJointPosition: unsupported argument: %s",
+                rospy.loginfo("moveToPose: unsupported argument: %s",
                               arg)
 
         # Create goal
