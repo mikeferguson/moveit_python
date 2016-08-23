@@ -28,7 +28,13 @@
 import thread, copy
 import rospy
 
-from pyassimp import pyassimp
+try:
+    from pyassimp import pyassimp
+    use_pyassimp = True
+except:
+    # In 16.04, pyassimp is busted
+    # https://bugs.launchpad.net/ubuntu/+source/assimp/+bug/1589949
+    use_pyassimp = False
 
 from geometry_msgs.msg import Pose, PoseStamped, Point
 from moveit_msgs.msg import CollisionObject, AttachedCollisionObject
@@ -103,6 +109,9 @@ class PlanningSceneInterface(object):
     ## @param pose A geometry_msgs/Pose for the object
     ## @param filename The mesh file to load
     def makeMesh(self, name, pose, filename):
+        if not use_pyassimp:
+            rospy.logerr('pyassimp is broken on your platform, cannot load meshes')
+            return
         scene = pyassimp.load(filename)
         if not scene.meshes:
             rospy.logerr('Unable to load mesh')
