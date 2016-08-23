@@ -2,8 +2,8 @@
 Changelog for package moveit_python
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.2.17 (2016-08-23)
+-------------------
 * Merge pull request `#9 <https://github.com/mikeferguson/moveit_python/issues/9>`_ from mikeferguson/pyassimp_fix
   pyassimp is broken in 16.04, temporary work around so we can release
 * Contributors: Michael Ferguson
