@@ -44,14 +44,22 @@ from shape_msgs.msg import MeshTriangle, Mesh, SolidPrimitive, Plane
 
 ## @brief A class for managing the state of the planning scene
 ## @param frame The fixed frame in which planning is being done (needs to be part of robot?)
+## @param ns A namespace to push all topics down into.
 ## @param init_from_service Whether to initialize our list of objects by calling the service
 ##            NOTE: this requires that said service be in the move_group launch file, which
 ##            is not the default from the setup assistant.
 class PlanningSceneInterface(object):
-    def __init__(self, frame, init_from_service=True):
+    def __init__(self, frame, ns='', init_from_service=True):
+        # ns must be a string
+        if not isinstance(ns, basestring):
+            rospy.logerr('Namespace must be a string!')
+            ns = ''
+        elif not ns.endswith('/'):
+            ns += '/'
+
         self._fixed_frame = frame
 
-        self._scene_pub = rospy.Publisher('planning_scene',
+        self._scene_pub = rospy.Publisher(ns + 'planning_scene',
                                           PlanningScene,
                                           queue_size=10)
         self._apply_service = rospy.ServiceProxy('apply_planning_scene', ApplyPlanningScene)
@@ -70,8 +78,8 @@ class PlanningSceneInterface(object):
         # get the initial planning scene
         if init_from_service:
             rospy.loginfo('Waiting for get_planning_scene')
-            rospy.wait_for_service('get_planning_scene')
-            self._service = rospy.ServiceProxy('get_planning_scene',
+            rospy.wait_for_service(ns + 'get_planning_scene')
+            self._service = rospy.ServiceProxy(ns + 'get_planning_scene',
                                                GetPlanningScene)
             try:
                 req = PlanningSceneComponents()
@@ -85,7 +93,7 @@ class PlanningSceneInterface(object):
                 rospy.logerr('Failed to get initial planning scene, results may be wonky: %s', e)
 
         # subscribe to planning scene
-        rospy.Subscriber('move_group/monitored_planning_scene',
+        rospy.Subscriber(ns + 'move_group/monitored_planning_scene',
                          PlanningScene,
                          self.sceneCb)
 
@@ -310,7 +318,6 @@ class PlanningSceneInterface(object):
         """ Remove an attached object. """
         o = AttachedCollisionObject()
         o.object.operation = CollisionObject.REMOVE
-        #o.link_name = ??
         o.object.id = name
 
         try:
