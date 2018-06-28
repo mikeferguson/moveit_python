@@ -30,7 +30,6 @@ import rospy
 
 try:
     from pyassimp import pyassimp
-
     use_pyassimp = True
 except:
     # In 16.04, pyassimp is busted
@@ -54,17 +53,19 @@ class PlanningSceneInterface(object):
         # ns must be a string
         if not isinstance(ns, basestring):
             rospy.logerr('Namespace must be a string!')
+        else:
+            ns += '/'
 
         self._fixed_frame = frame
 
         # publisher to send objects to MoveIt
-        self._pub = rospy.Publisher(ns + '/collision_object',
+        self._pub = rospy.Publisher(ns + 'collision_object',
                                     CollisionObject,
                                     queue_size=10)
-        self._attached_pub = rospy.Publisher(ns + '/attached_collision_object',
+        self._attached_pub = rospy.Publisher(ns + 'attached_collision_object',
                                              AttachedCollisionObject,
                                              queue_size=10)
-        self._scene_pub = rospy.Publisher(ns + '/planning_scene',
+        self._scene_pub = rospy.Publisher(ns + 'planning_scene',
                                           PlanningScene,
                                           queue_size=10)
 
@@ -83,8 +84,8 @@ class PlanningSceneInterface(object):
         # get the initial planning scene
         if init_from_service:
             rospy.loginfo('Waiting for get_planning_scene')
-            rospy.wait_for_service(ns + '/get_planning_scene')
-            self._service = rospy.ServiceProxy(ns + '/get_planning_scene',
+            rospy.wait_for_service(ns + 'get_planning_scene')
+            self._service = rospy.ServiceProxy(ns + 'get_planning_scene',
                                                GetPlanningScene)
             try:
                 req = PlanningSceneComponents()
@@ -98,7 +99,7 @@ class PlanningSceneInterface(object):
                 rospy.logerr('Failed to get initial planning scene, results may be wonky: %s', e)
 
         # subscribe to planning scene
-        rospy.Subscriber(ns + '/move_group/monitored_planning_scene',
+        rospy.Subscriber(ns + 'move_group/monitored_planning_scene',
                          PlanningScene,
                          self.sceneCb)
 
