@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2011-2014, Michael Ferguson
+# Copyright 2011-2018, Michael Ferguson
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -34,21 +34,23 @@ from moveit_python import PlanningSceneInterface
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Attach objects to link in the MoveIt planning scene.")
-    parser.add_argument("--name",
-                        nargs="?",
-                        help="Name of object to be attached")
-    parser.add_argument("--link",
-                        nargs="?",
-                        help="Name of link to where the object should be attached")
+    parser.add_argument("name", help="Name of the box to be attached")
+    parser.add_argument("link", help="Name of link to where the box should be attached")
+    parser.add_argument("x", type=float, help="X coordinate of center of box")
+    parser.add_argument("y", type=float, help="Y coordinate of center of box")
+    parser.add_argument("z", type=float, help="Z coordinate of center of box")
+    parser.add_argument("size_x", type=float, help="Size of box in x dimension")
+    parser.add_argument("size_y", type=float, help="Size of box in y dimension")
+    parser.add_argument("size_z", type=float, help="Size of box in z dimension")
     args = parser.parse_args()
 
     if args.name:
       if args.link:
-        rospy.init_node("attache_objects")
+        rospy.init_node("attach_box")
         scene = PlanningSceneInterface("/base_link")
         print("Attach Object with name: %s to Link: %s" % (args.name, args.link))
-        scene.attachBox(args.name, 0.1,0.1,0.1, 0.0,0.0,0.0, args.link)
-
+        scene.attachBox(args.name, args.size_x, args.size_y, args.size_z,
+                        args.x, args.y, args.z, args.link)
     else:
         parser.print_help()
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2011-2014, Michael Ferguson
+# Copyright 2011-2018, Michael Ferguson
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -33,18 +33,22 @@ from moveit_python import PlanningSceneInterface
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description="Remove objects from the MoveIt planning scene.")
-    parser.add_argument("--name",
-                        nargs="?",
-                        help="Name of object to remove")
+        description="Add a box to the MoveIt planning scene.")
+    parser.add_argument("name", help="Name of the box to add")
+    parser.add_argument("x", type=float, help="X coordinate of center of box")
+    parser.add_argument("y", type=float, help="Y coordinate of center of box")
+    parser.add_argument("z", type=float, help="Z coordinate of center of box")
+    parser.add_argument("size_x", type=float, help="Size of box in x dimension")
+    parser.add_argument("size_y", type=float, help="Size of box in y dimension")
+    parser.add_argument("size_z", type=float, help="Size of box in z dimension")
     args = parser.parse_args()
 
     if args.name:
-        rospy.init_node("add_boxes")
+        rospy.init_node("add_box")
         scene = PlanningSceneInterface("/base_link")
         print("Adding Box with name: %s" % args.name)
-        scene.addBox(args.name, 0.1,0.1,0.1, 3,3,3, True)
-        scene.waitForSync()
+        scene.addBox(args.name, args.size_x, args.size_y, args.size_z,
+                     args.x, args.y, args.z, use_service=True)
     else:
         parser.print_help()
 

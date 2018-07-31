@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2011-2014, Michael Ferguson
+# Copyright 2011-2018, Michael Ferguson
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -50,7 +50,7 @@ if __name__ == "__main__":
         scene = PlanningSceneInterface("base_link")
         for name in scene.getKnownCollisionObjects():
             print("Removing %s" % name)
-            scene.removeCollisionObject(name, wait=False)
+            scene.removeCollisionObject(name, use_service=False)
         scene.waitForSync()
     elif args.name:
         rospy.init_node("remove_objects")
