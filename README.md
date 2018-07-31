@@ -30,8 +30,9 @@ is probably not called "planning_group_name".
 ## PlanningSceneInterface
 
 The PlanningSceneInterface allows you to easily insert and remove objects from
-the MoveIt! planning scene. Unlike the moveit_commander, this module tracks when
-objects are added removed, and will re-attempt add/remove if a message is loss.
+the MoveIt! planning scene. Starting with version 0.3.0, this module will try
+to use the newer service-based approach to apply planning scene updates, as
+this is much more robust than publishing messages over topics asynchronously.
 
 ```python
 import rospy
@@ -50,14 +51,14 @@ p.addCube("my_cube", 0.1, 1, 0, 0.5)
 p.removeCollisionObject("my_cube")
 ```
 
-Each time an object is added or removed, the planning scene interface will
-wait until it recieves confirmation that the request has been processed by MoveIt!
-If sending a large number of objects, it would be more efficient to only wait
-for synchronization at the end, this can be achieved by doing like so:
+If for some reason you would prefer to not use the service, simply set
+"use_service" to false in the various add/remove calls. Calling waitForSync
+will republish messages as needed to synchronize the planning scene between
+your script and MoveIt.
 
 ```python
-p.addCube("my_cube", 0.1, 1, 0, 0.5, wait=False)
-p.addCube("my_other_cube", 0.1, 2, 0, 0.5, wait=False)
+p.addCube("my_cube", 0.1, 1, 0, 0.5, use_service=False)
+p.addCube("my_other_cube", 0.1, 2, 0, 0.5, use_service=False)
 p.waitForSync()
 ```
 

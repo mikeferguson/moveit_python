@@ -89,8 +89,11 @@ class PlanningSceneInterface(object):
                          PlanningScene,
                          self.sceneCb)
 
-    ## @brief Sent new update to planning scene
-    def sentUpdate(self, collision_object, attached_collision_object, wait=True):
+    ## @brief Send new update to planning scene
+    ## @param collision_object A collision object to add to scene, or None
+    ## @param attached_collision_object Attached collision object to add to scene, or None
+    ## @param use_service If true, update will be sent via apply service, otherwise by topic
+    def sendUpdate(self, collision_object, attached_collision_object, use_service=True):
         ps = PlanningScene()
         ps.is_diff = True
         if collision_object:
@@ -99,22 +102,19 @@ class PlanningSceneInterface(object):
         if attached_collision_object:
             ps.robot_state.attached_collision_objects.append(attached_collision_object)
 
-        if wait:
+        if use_service:
             resp = self._apply_service.call(ps)
-            if resp.success == True:
-                rospy.loginfo("added planning diff.")
-            else:
-                rospy.logerr("could not add planning diff.")
-            self.waitForSync()
+            if not resp.success:
+                rospy.logerr("Could not apply planning scene diff.")
         else:
             self._scene_pub.publish(ps)
 
     ## @brief Clear the planning scene of all objects
     def clear(self):
         for name in self.getKnownCollisionObjects():
-            self.removeCollisionObject(name, False)
+            self.removeCollisionObject(name, True)
         for name in self.getKnownAttachedObjects():
-            self.removeAttachedObject(name, False)
+            self.removeAttachedObject(name, True)
         self.waitForSync()
 
     ## @brief Make a mesh collision object
@@ -159,8 +159,6 @@ class PlanningSceneInterface(object):
     ## @param name Name of the object
     ## @param solid The solid primitive to add
     ## @param pose A geometry_msgs/Pose for the object
-    ## @param wait When true, we wait for planning scene to actually update,
-    ##             this provides immunity against lost messages.
     def makeSolidPrimitive(self, name, solid, pose):
         o = CollisionObject()
         o.header.stamp = rospy.Time.now()
@@ -188,40 +186,36 @@ class PlanningSceneInterface(object):
     ## @param name Name of the object
     ## @param pose A geometry_msgs/Pose for the object
     ## @param filename The mesh file to load
-    ## @param wait When true, we wait for planning scene to actually update,
-    ##             this provides immunity against lost messages.
-    def addMesh(self, name, pose, filename, wait=True):
+    ## @param use_service If true, update will be sent via apply service
+    def addMesh(self, name, pose, filename, use_service=True):
         o = self.makeMesh(name, pose, filename)
         self._objects[name] = o
-        self.sentUpdate(o, None, wait)
+        self.sendUpdate(o, None, use_service)
 
     ## @brief Attach a mesh into the planning scene
     ## @param name Name of the object
     ## @param pose A geometry_msgs/Pose for the object
     ## @param filename The mesh file to load
-    ## @param wait When true, we wait for planning scene to actually update,
-    ##             this provides immunity against lost messages.
+    ## @param use_service If true, update will be sent via apply service
     def attachMesh(self, name, pose, filename, link_name, touch_links=None,
-                   detach_posture=None, weight=0.0, wait=True):
+                   detach_posture=None, weight=0.0, use_service=True):
         o = self.makeMesh(name, pose, filename)
         o.header.frame_id = link_name
         a = self.makeAttached(link_name, o, touch_links, detach_posture,
                               weight)
         self._attached_objects[name] = a
-        self.sentUpdate(None, a, wait)
+        self.sendUpdate(None, a, use_service)
 
     ## @brief Insert a solid primitive into planning scene
-    ## @param wait When true, we wait for planning scene to actually update,
-    ##             this provides immunity against lost messages.
-    def addSolidPrimitive(self, name, solid, pose, wait=True):
+    ## @param use_service If true, update will be sent via apply service
+    def addSolidPrimitive(self, name, solid, pose, use_service=True):
         o = self.makeSolidPrimitive(name, solid, pose)
         self._objects[name] = o
-        self.sentUpdate(o, None, wait)
+        self.sendUpdate(o, None, use_service)
 
     ## @brief Insert new cylinder into planning scene
-    ## @param wait When true, we wait for planning scene to actually update,
-    ##             this provides immunity against lost messages.
-    def addCylinder(self, name, height, radius, x, y, z, wait=True):
+    ## @param use_service If true, update will be sent via apply service
+    def addCylinder(self, name, height, radius, x, y, z, use_service=True):
         s = SolidPrimitive()
         s.dimensions = [height, radius]
         s.type = s.CYLINDER
@@ -233,7 +227,7 @@ class PlanningSceneInterface(object):
         ps.pose.position.z = z
         ps.pose.orientation.w = 1.0
 
-        self.addSolidPrimitive(name, s, ps.pose, wait)
+        self.addSolidPrimitive(name, s, ps.pose, use_service)
 
     ## @brief Insert new box into planning scene
     ## @param name Name of the object
@@ -243,9 +237,8 @@ class PlanningSceneInterface(object):
     ## @param x The x position in link_name frame
     ## @param y The y position in link_name frame
     ## @param z The z position in link_name frame
-    ## @param wait When true, we wait for planning scene to actually update,
-    ##             this provides immunity against lost messages.
-    def addBox(self, name, size_x, size_y, size_z, x, y, z, wait=True):
+    ## @param use_service If true, update will be sent via apply service
+    def addBox(self, name, size_x, size_y, size_z, x, y, z, use_service=True):
         s = SolidPrimitive()
         s.dimensions = [size_x, size_y, size_z]
         s.type = s.BOX
@@ -257,7 +250,7 @@ class PlanningSceneInterface(object):
         ps.pose.position.z = z
         ps.pose.orientation.w = 1.0
 
-        self.addSolidPrimitive(name, s, ps.pose, wait)
+        self.addSolidPrimitive(name, s, ps.pose, use_service)
 
     ## @brief Attach a box into the planning scene
     ## @param name Name of the object
@@ -269,11 +262,10 @@ class PlanningSceneInterface(object):
     ## @param z The z position in link_name frame
     ## @param link_name Name of link to attach this object to
     ## @param touch_links Names of robot links that can touch this object
-    ## @param wait When true, we wait for planning scene to actually update,
-    ##             this provides immunity against lost messages.
+    ## @param use_service If true, update will be sent via apply service
     def attachBox(self, name, size_x, size_y, size_z, x, y, z, link_name,
                   touch_links=None, detach_posture=None, weight=0.0,
-                  wait=True):
+                  use_service=True):
         s = SolidPrimitive()
         s.dimensions = [size_x, size_y, size_z]
         s.type = s.BOX
@@ -287,18 +279,16 @@ class PlanningSceneInterface(object):
         o.header.frame_id = link_name
         a = self.makeAttached(link_name, o, touch_links, detach_posture, weight)
         self._attached_objects[name] = a
-        self.sentUpdate(None, a, wait)
+        self.sendUpdate(None, a, use_service)
 
     ## @brief Insert new cube to planning scene
-    ## @param wait When true, we wait for planning scene to actually update,
-    ##             this provides immunity against lost messages.
-    def addCube(self, name, size, x, y, z, wait=True):
-        self.addBox(name, size, size, size, x, y, z, wait)
+    ## @param use_service If true, update will be sent via apply service
+    def addCube(self, name, size, x, y, z, use_service=True):
+        self.addBox(name, size, size, size, x, y, z, use_service)
 
     ## @brief Send message to remove object
-    ## @param wait When true, we wait for planning scene to actually update,
-    ##             this provides immunity against lost messages.
-    def removeCollisionObject(self, name, wait=True):
+    ## @param use_service If true, update will be sent via apply service
+    def removeCollisionObject(self, name, use_service=True):
         """ Remove an object. """
         o = CollisionObject()
         o.header.stamp = rospy.Time.now()
@@ -312,12 +302,11 @@ class PlanningSceneInterface(object):
         except KeyError:
             pass
 
-        self.sentUpdate(o, None, wait)
+        self.sendUpdate(o, None, use_service)
 
     ## @brief Send message to remove object
-    ## @param wait When true, we wait for planning scene to actually update,
-    ##             this provides immunity against lost messages.
-    def removeAttachedObject(self, name, wait=True):
+    ## @param use_service If true, update will be sent via apply service
+    def removeAttachedObject(self, name, use_service=True):
         """ Remove an attached object. """
         o = AttachedCollisionObject()
         o.object.operation = CollisionObject.REMOVE
@@ -330,7 +319,7 @@ class PlanningSceneInterface(object):
         except KeyError:
             pass
 
-        self.sentUpdate(None, o, wait)
+        self.sendUpdate(None, o, use_service)
 
     ## @brief Update the object lists from a PlanningScene message
     def sceneCb(self, msg, initial=False):
@@ -399,12 +388,12 @@ class PlanningSceneInterface(object):
             for name in self._objects.keys():
                 if name not in self._collision + self._attached:
                     rospy.logwarn('ObjectManager: %s not added yet', name)
-                    self.sentUpdate(self._objects[name], None, False)
+                    self.sendUpdate(self._objects[name], None, False)
                     sync = False
             for name in self._attached_objects.keys():
                 if name not in self._attached:
                     rospy.logwarn('ObjectManager: %s not attached yet', name)
-                    self.sentUpdate(None, self._attached_objects[name], False)
+                    self.sendUpdate(None, self._attached_objects[name], False)
                     sync = False
             # timeout
             if rospy.Time.now() - t > rospy.Duration(max_time):
@@ -431,5 +420,7 @@ class PlanningSceneInterface(object):
         p.is_diff = True
         for color in self._colors.values():
             p.object_colors.append(color)
-        self._scene_pub.publish(p)
-
+        resp = self._apply_service.call(p)
+        if not resp.success:
+            rospy.logerr("Could not update colors through service, using topic instead.")
+            self._scene_pub.publish(p)
