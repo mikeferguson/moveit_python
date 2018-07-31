@@ -39,7 +39,7 @@ except:
 from geometry_msgs.msg import Pose, PoseStamped, Point
 from moveit_msgs.msg import CollisionObject, AttachedCollisionObject
 from moveit_msgs.msg import PlanningScene, PlanningSceneComponents, ObjectColor
-from moveit_msgs.srv import GetPlanningScene
+from moveit_msgs.srv import GetPlanningScene, ApplyPlanningScene
 from shape_msgs.msg import MeshTriangle, Mesh, SolidPrimitive, Plane
 
 ## @brief A class for managing the state of the planning scene
@@ -51,17 +51,10 @@ class PlanningSceneInterface(object):
     def __init__(self, frame, init_from_service=True):
         self._fixed_frame = frame
 
-        # publisher to send objects to MoveIt
-        self._pub = rospy.Publisher('collision_object',
-                                    CollisionObject,
-                                    queue_size=10)
-        self._attached_pub = rospy.Publisher('attached_collision_object',
-                                             AttachedCollisionObject,
-                                             queue_size=10)
         self._scene_pub = rospy.Publisher('planning_scene',
                                           PlanningScene,
                                           queue_size=10)
-
+        self._apply_service = rospy.ServiceProxy('apply_planning_scene', ApplyPlanningScene)
         # track the attached and collision objects
         self._mutex = thread.allocate_lock()
         # these are updated based what the planning scene actually contains
@@ -95,6 +88,26 @@ class PlanningSceneInterface(object):
         rospy.Subscriber('move_group/monitored_planning_scene',
                          PlanningScene,
                          self.sceneCb)
+
+    ## @brief Sent new update to planning scene
+    def sentUpdate(self, collision_object, attached_collision_object, wait=True):
+        ps = PlanningScene()
+        ps.is_diff = True
+        if collision_object:
+            ps.world.collision_objects.append(collision_object)
+
+        if attached_collision_object:
+            ps.robot_state.attached_collision_objects.append(attached_collision_object)
+
+        if wait:
+            resp = self._apply_service.call(ps)
+            if resp.success == True:
+                rospy.loginfo("added planning diff.")
+            else:
+                rospy.logerr("could not add planning diff.")
+            self.waitForSync()
+        else:
+            self._scene_pub.publish(ps)
 
     ## @brief Clear the planning scene of all objects
     def clear(self):
@@ -180,9 +193,7 @@ class PlanningSceneInterface(object):
     def addMesh(self, name, pose, filename, wait=True):
         o = self.makeMesh(name, pose, filename)
         self._objects[name] = o
-        self._pub.publish(o)
-        if wait:
-            self.waitForSync()
+        self.sentUpdate(o, None, wait)
 
     ## @brief Attach a mesh into the planning scene
     ## @param name Name of the object
@@ -193,13 +204,13 @@ class PlanningSceneInterface(object):
     def attachMesh(self, name, pose, filename, link_name, touch_links=None,
                    detach_posture=None, weight=0.0, wait=True):
         o = self.makeMesh(name, pose, filename)
+        r = self.makeMesh(name, pose, filename)
+        r.operation = r.REMOVE
         o.header.frame_id = link_name
         a = self.makeAttached(link_name, o, touch_links, detach_posture,
                               weight)
         self._attached_objects[name] = a
-        self._attached_pub.publish(a)
-        if wait:
-            self.waitForSync()
+        self.sentUpdate(r, a, wait)
 
     ## @brief Insert a solid primitive into planning scene
     ## @param wait When true, we wait for planning scene to actually update,
@@ -207,9 +218,7 @@ class PlanningSceneInterface(object):
     def addSolidPrimitive(self, name, solid, pose, wait=True):
         o = self.makeSolidPrimitive(name, solid, pose)
         self._objects[name] = o
-        self._pub.publish(o)
-        if wait:
-            self.waitForSync()
+        self.sentUpdate(o, None, wait)
 
     ## @brief Insert new cylinder into planning scene
     ## @param wait When true, we wait for planning scene to actually update,
@@ -276,14 +285,13 @@ class PlanningSceneInterface(object):
         p.position.y = y
         p.position.z = z
         p.orientation.w = 1.0
-
+        r = self.makeSolidPrimitive(name, s, p) # first remove from environment
+        r.operation = r.REMOVE
         o = self.makeSolidPrimitive(name, s, p)
         o.header.frame_id = link_name
         a = self.makeAttached(link_name, o, touch_links, detach_posture, weight)
         self._attached_objects[name] = a
-        self._attached_pub.publish(a)
-        if wait:
-            self.waitForSync()
+        self.sentUpdate(r, a, wait)
 
     ## @brief Insert new cube to planning scene
     ## @param wait When true, we wait for planning scene to actually update,
@@ -308,9 +316,7 @@ class PlanningSceneInterface(object):
         except KeyError:
             pass
 
-        self._pub.publish(o)
-        if wait:
-            self.waitForSync()
+        self.sentUpdate(o, None, wait)
 
     ## @brief Send message to remove object
     ## @param wait When true, we wait for planning scene to actually update,
@@ -328,9 +334,7 @@ class PlanningSceneInterface(object):
         except KeyError:
             pass
 
-        self._attached_pub.publish(o)
-        if wait:
-            self.waitForSync()
+        self.sentUpdate(None, o, wait)
 
     ## @brief Update the object lists from a PlanningScene message
     def sceneCb(self, msg, initial=False):
@@ -386,21 +390,25 @@ class PlanningSceneInterface(object):
             for name in self._collision:
                 if name in self._removed.keys():
                     # should be removed, is not
+                    rospy.logwarn('ObjectManager: %s not removed yet', name)
                     self.removeCollisionObject(name, False)
                     sync = False
             for name in self._attached:
                 if name in self._attached_removed.keys():
                     # should be removed, is not
+                    rospy.logwarn('ObjectManager: Attached object name: %s not removed yet', name)
                     self.removeAttachedObject(name, False)
                     sync = False
             # add missing objects
             for name in self._objects.keys():
                 if name not in self._collision + self._attached:
-                    self._pub.publish(self._objects[name])
+                    rospy.logwarn('ObjectManager: %s not added yet', name)
+                    self.sentUpdate(self._objects[name], None, False)
                     sync = False
             for name in self._attached_objects.keys():
                 if name not in self._attached:
-                    self._attached_pub.publish(self._attached_objects[name])
+                    rospy.logwarn('ObjectManager: %s not attached yet', name)
+                    self.sentUpdate(None, self._attached_objects[name], False)
                     sync = False
             # timeout
             if rospy.Time.now() - t > rospy.Duration(max_time):
