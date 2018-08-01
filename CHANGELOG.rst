@@ -2,6 +2,20 @@
 Changelog for package moveit_python
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* add namespace functionality on planning_scene_interface.py
+* additional cleanup/documentation
+  * use apply_service for colors
+  * rename sentUpdate to sendUpdate, add docs
+  * rename wait param to use_service (the meaning has changed)
+  * remove some spammy logging
+  * don't waitForSync when using service
+* Merge pull request `#10 <https://github.com/mikeferguson/moveit_python/issues/10>`_ from alemme/master
+  adapt the code for the `apply` service
+* added services to add objects to environment and attach them. Following http://docs.ros.org/kinetic/api/moveit_tutorials/html/doc/pr2_tutorials/planning/src/doc/planning_scene_ros_api_tutorial.html#interlude-synchronous-vs-asynchronous-updates
+* Contributors: Benjamin-Tan, Lemme, Michael Ferguson
+
 0.2.17 (2016-08-23)
 -------------------
 * Merge pull request `#9 <https://github.com/mikeferguson/moveit_python/issues/9>`_ from mikeferguson/pyassimp_fix
