@@ -2,8 +2,8 @@
 Changelog for package moveit_python
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.3.0 (2018-07-31)
+------------------
 * add namespace functionality on planning_scene_interface.py
 * additional cleanup/documentation
   * use apply_service for colors
