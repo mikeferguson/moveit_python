@@ -62,7 +62,7 @@ class PlanningSceneInterface(object):
         self._scene_pub = rospy.Publisher(ns + 'planning_scene',
                                           PlanningScene,
                                           queue_size=10)
-        self._apply_service = rospy.ServiceProxy('apply_planning_scene', ApplyPlanningScene)
+        self._apply_service = rospy.ServiceProxy(ns + 'apply_planning_scene', ApplyPlanningScene)
         # track the attached and collision objects
         self._mutex = thread.allocate_lock()
         # these are updated based what the planning scene actually contains
