@@ -40,12 +40,13 @@ class MoveGroupInterface(object):
     ## @brief Constructor for this utility
     ## @param group Name of the MoveIt! group to command
     ## @param frame Name of the fixed frame in which planning happens
+    ## @param move_group Name of the action server
     ## @param listener A TF listener instance (optional, will create a new one if None)
     ## @param plan_only Should we only plan, but not execute?
-    def __init__(self, group, frame, listener=None, plan_only=False):
+    def __init__(self, group, frame, listener=None, plan_only=False, move_group="move_group"):
         self._group = group
         self._fixed_frame = frame
-        self._action = actionlib.SimpleActionClient('move_group',
+        self._action = actionlib.SimpleActionClient(move_group,
                                                     MoveGroupAction)
         self._action.wait_for_server()
         if listener == None:
