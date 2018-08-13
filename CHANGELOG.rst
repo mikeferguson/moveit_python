@@ -2,8 +2,8 @@
 Changelog for package moveit_python
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.3.1 (2018-08-13)
+------------------
 * add missing namespace to apply service
 * Contributors: Michael Ferguson
 
