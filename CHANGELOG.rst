@@ -2,6 +2,11 @@
 Changelog for package moveit_python
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* add missing namespace to apply service
+* Contributors: Michael Ferguson
+
 0.3.0 (2018-07-31)
 ------------------
 * add namespace functionality on planning_scene_interface.py
