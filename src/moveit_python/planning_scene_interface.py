@@ -252,23 +252,6 @@ class PlanningSceneInterface(object):
         ps.pose.orientation.w = 1.0
 
         self.addSolidPrimitive(name, s, ps.pose, use_service)
-
-    # Add Plane
-    def addPlane(self, name, normal=(0,0,1), Offset=0, x,y,z, use_service=True):
-       
-        s = SolidPrimitive()
-        s.dimensions = [normal, Offset]
-        s.type = s.PLANE
-
-        ps = PoseStamped()
-        ps.header.frame_id = self._fixed_frame
-        ps.pose.position.x = x
-        ps.pose.position.y = y
-        ps.pose.position.z = z
-        ps.pose.orientation.w = 1.0
-
-        self.addSolidPrimitive(name, s, ps.pose, use_service)
-
          
     ## @brief Insert new box into planning scene
     ## @param name Name of the object
