@@ -233,6 +233,9 @@ class PlanningSceneInterface(object):
         ps.pose.position.x = x
         ps.pose.position.y = y
         ps.pose.position.z = z
+        ps.pose.orientation.x = 1.0
+        ps.pose.orientation.y = 2.0
+        ps.pose.orientation.z = 1.0
         ps.pose.orientation.w = 1.0
 
         self.addSolidPrimitive(name, s, ps.pose, use_service)
@@ -249,6 +252,9 @@ class PlanningSceneInterface(object):
         ps.pose.position.x = x
         ps.pose.position.y = y
         ps.pose.position.z = z
+        ps.pose.orientation.x = 1.0
+        ps.pose.orientation.y = 2.0
+        ps.pose.orientation.z = 1.0
         ps.pose.orientation.w = 1.0
 
         self.addSolidPrimitive(name, s, ps.pose, use_service)
@@ -262,7 +268,7 @@ class PlanningSceneInterface(object):
     ## @param y The y position in link_name frame
     ## @param z The z position in link_name frame
     ## @param use_service If true, update will be sent via apply service
-    def addBox(self, name, size_x, size_y, size_z, x, y, z,r,p,yaw ,use_service=True):
+    def addBox(self, name, size_x, size_y, size_z, x, y, z,use_service=True):
         s = SolidPrimitive()
         s.dimensions = [size_x, size_y, size_z]
         s.type = s.BOX
@@ -272,9 +278,9 @@ class PlanningSceneInterface(object):
         ps.pose.position.x = x
         ps.pose.position.y = y
         ps.pose.position.z = z
-        ps.pose.position.r = r
-        ps.pose.position.p = p
-        ps.pose.position.yaw = yaw 
+        ps.pose.orientation.x = 2.0
+        ps.pose.orientation.y = 2.0
+        ps.pose.orientation.z = 1.0
         ps.pose.orientation.w = 1.0
 
         self.addSolidPrimitive(name, s, ps.pose, use_service)
@@ -301,7 +307,7 @@ class PlanningSceneInterface(object):
         p.position.x = x
         p.position.y = y
         p.position.z = z
-        p.orientation.w = w
+        p.orientation.w = 1.0
         o = self.makeSolidPrimitive(name, s, p)
         o.header.frame_id = link_name
         a = self.makeAttached(link_name, o, touch_links, detach_posture, weight)
