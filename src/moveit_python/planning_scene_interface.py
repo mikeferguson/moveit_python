@@ -233,7 +233,7 @@ class PlanningSceneInterface(object):
         ps.pose.position.x = x
         ps.pose.position.y = y
         ps.pose.position.z = z
-        ps.pose.orientation.w = 1.0
+        ps.pose.orientation.w = w
 
         self.addSolidPrimitive(name, s, ps.pose, use_service)
 
@@ -249,7 +249,7 @@ class PlanningSceneInterface(object):
         ps.pose.position.x = x
         ps.pose.position.y = y
         ps.pose.position.z = z
-        ps.pose.orientation.w = 1.0
+        ps.pose.orientation.w = w
 
         self.addSolidPrimitive(name, s, ps.pose, use_service)
          
@@ -272,7 +272,7 @@ class PlanningSceneInterface(object):
         ps.pose.position.x = x
         ps.pose.position.y = y
         ps.pose.position.z = z
-        ps.pose.orientation.w = 1.0
+        ps.pose.orientation.w = w
 
         self.addSolidPrimitive(name, s, ps.pose, use_service)
 
