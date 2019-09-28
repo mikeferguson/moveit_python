@@ -298,7 +298,7 @@ class PlanningSceneInterface(object):
         p.position.x = x
         p.position.y = y
         p.position.z = z
-        p.orientation.w = 1.0
+        p.orientation.w = w
         o = self.makeSolidPrimitive(name, s, p)
         o.header.frame_id = link_name
         a = self.makeAttached(link_name, o, touch_links, detach_posture, weight)
