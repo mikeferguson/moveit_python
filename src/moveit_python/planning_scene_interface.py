@@ -223,7 +223,7 @@ class PlanningSceneInterface(object):
 
     ## @brief Insert new cylinder into planning scene
     ## @param use_service If true, update will be sent via apply service
-    def addCylinder(self, name, height, radius, x, y, z, use_service=True):
+    def addCylinder(self, name, height, radius, x, y, z, w, use_service=True):
         s = SolidPrimitive()
         s.dimensions = [height, radius]
         s.type = s.CYLINDER
@@ -238,7 +238,7 @@ class PlanningSceneInterface(object):
         self.addSolidPrimitive(name, s, ps.pose, use_service)
 
     # Add Sphere
-    def addSphere(self, name, radius, x, y, z, use_service=True):
+    def addSphere(self, name, radius, x, y, z, w, use_service=True):
         
         s = SolidPrimitive()
         s.dimensions = [radius]
@@ -262,7 +262,7 @@ class PlanningSceneInterface(object):
     ## @param y The y position in link_name frame
     ## @param z The z position in link_name frame
     ## @param use_service If true, update will be sent via apply service
-    def addBox(self, name, size_x, size_y, size_z, x, y, z, use_service=True):
+    def addBox(self, name, size_x, size_y, size_z, x, y, z, w, use_service=True):
         s = SolidPrimitive()
         s.dimensions = [size_x, size_y, size_z]
         s.type = s.BOX
@@ -287,7 +287,7 @@ class PlanningSceneInterface(object):
     ## @param link_name Name of link to attach this object to
     ## @param touch_links Names of robot links that can touch this object
     ## @param use_service If true, update will be sent via apply service
-    def attachBox(self, name, size_x, size_y, size_z, x, y, z, link_name,
+    def attachBox(self, name, size_x, size_y, size_z, x, y, z, w, link_name,
                   touch_links=None, detach_posture=None, weight=0.0,
                   use_service=True):
         s = SolidPrimitive()
@@ -307,8 +307,8 @@ class PlanningSceneInterface(object):
 
     ## @brief Insert new cube to planning scene
     ## @param use_service If true, update will be sent via apply service
-    def addCube(self, name, size, x, y, z, use_service=True):
-        self.addBox(name, size, size, size, x, y, z, use_service)
+    def addCube(self, name, size, x, y, z, w, use_service=True):
+        self.addBox(name, size, size, size, x, y, z, w, use_service)
 
     ## @brief Send message to remove object
     ## @param use_service If true, update will be sent via apply service
