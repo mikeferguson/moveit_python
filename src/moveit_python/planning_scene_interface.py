@@ -228,7 +228,7 @@ class PlanningSceneInterface(object):
         s.dimensions = [height, radius]
         s.type = s.CYLINDER
 
-        ps = PoseStamped()
+        ps = Pose()
         ps.header.frame_id = self._fixed_frame
         ps.pose.position.x = x
         ps.pose.position.y = y
@@ -244,7 +244,7 @@ class PlanningSceneInterface(object):
         s.dimensions = [radius]
         s.type = s.SPHERE
 
-        ps = PoseStamped()
+        ps = Pose()
         ps.header.frame_id = self._fixed_frame
         ps.pose.position.x = x
         ps.pose.position.y = y
@@ -267,7 +267,7 @@ class PlanningSceneInterface(object):
         s.dimensions = [size_x, size_y, size_z]
         s.type = s.BOX
 
-        ps = PoseStamped()
+        ps = Pose()
         ps.header.frame_id = self._fixed_frame
         ps.pose.position.x = x
         ps.pose.position.y = y
