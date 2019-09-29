@@ -251,7 +251,6 @@ class PlanningSceneInterface(object):
         ps.header.frame_id = self._fixed_frame
         ps.pose.position.x = x
         ps.pose.position.y = y
-        ps.pose.position.z = z
         ps.pose.orientation.x = 1.0
         ps.pose.orientation.y = 2.0
         ps.pose.orientation.z = 1.0
