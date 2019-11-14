@@ -32,9 +32,14 @@ try:
     from pyassimp import pyassimp
     use_pyassimp = True
 except:
-    # In 16.04, pyassimp is busted
-    # https://bugs.launchpad.net/ubuntu/+source/assimp/+bug/1589949
-    use_pyassimp = False
+    # support pyassimp > 3.0
+    try:
+        import pyassimp
+        use_pyassimp = True
+    except:
+        # In 16.04, pyassimp is busted
+        # https://bugs.launchpad.net/ubuntu/+source/assimp/+bug/1589949
+        use_pyassimp = False
 
 from geometry_msgs.msg import Pose, PoseStamped, Point
 from moveit_msgs.msg import CollisionObject, AttachedCollisionObject
