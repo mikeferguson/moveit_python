@@ -1,4 +1,4 @@
-# Copyright 2011-2014, Michael Ferguson
+# Copyright 2011-2019, Michael Ferguson
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -227,6 +227,11 @@ class PlanningSceneInterface(object):
         self.sendUpdate(o, None, use_service)
 
     ## @brief Insert new cylinder into planning scene
+    ## @param height The height of the cylinder
+    ## @param radius The radius of the cylinder
+    ## @param x The x position in fixed frame
+    ## @param y The y position in fixed frame
+    ## @param z The z position in fixed frame
     ## @param use_service If true, update will be sent via apply service
     def addCylinder(self, name, height, radius, x, y, z, use_service=True):
         s = SolidPrimitive()
@@ -242,14 +247,34 @@ class PlanningSceneInterface(object):
 
         self.addSolidPrimitive(name, s, ps.pose, use_service)
 
+    ## @brief Insert new sphere into planning scene
+    ## @param radius The radius of the sphere
+    ## @param x The x position in fixed frame
+    ## @param y The y position in fixed frame
+    ## @param z The z position in fixed frame
+    ## @param use_service If true, update will be sent via apply service
+    def addSphere(self, name, radius, x, y, z, use_service=True):
+        s = SolidPrimitive()
+        s.dimensions = [radius]
+        s.type = s.SPHERE
+
+        ps = PoseStamped()
+        ps.header.frame_id = self._fixed_frame
+        ps.pose.position.x = x
+        ps.pose.position.y = y
+        ps.pose.position.z = z
+        ps.pose.orientation.w = 1.0
+
+        self.addSolidPrimitive(name, s, ps.pose, use_service)
+
     ## @brief Insert new box into planning scene
     ## @param name Name of the object
     ## @param size_x The x-dimensions size of the box
     ## @param size_y The y-dimensions size of the box
     ## @param size_z The z-dimensions size of the box
-    ## @param x The x position in link_name frame
-    ## @param y The y position in link_name frame
-    ## @param z The z position in link_name frame
+    ## @param x The x position in fixed frame
+    ## @param y The y position in fixed frame
+    ## @param z The z position in fixed frame
     ## @param use_service If true, update will be sent via apply service
     def addBox(self, name, size_x, size_y, size_z, x, y, z, use_service=True):
         s = SolidPrimitive()
