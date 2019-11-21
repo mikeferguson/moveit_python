@@ -2,8 +2,8 @@
 Changelog for package moveit_python
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.3.3 (2019-11-21)
+------------------
 * add sphere to planning scene interface
 * add move_group parameter to MoveGroup class
 * Contributors: Michael Ferguson, arwtyxouymz
