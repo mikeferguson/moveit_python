@@ -109,6 +109,7 @@ class PlanningSceneInterface(object):
     def sendUpdate(self, collision_object, attached_collision_object, use_service=True):
         ps = PlanningScene()
         ps.is_diff = True
+        ps.robot_state.is_diff = True
         if collision_object:
             ps.world.collision_objects.append(collision_object)
 
