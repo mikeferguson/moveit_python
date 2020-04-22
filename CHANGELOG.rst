@@ -2,6 +2,15 @@
 Changelog for package moveit_python
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fixed error message when removing attached object. (`#25 <https://github.com/mikeferguson/moveit_python/issues/25>`_)
+  Co-authored-by: Karl Kangur <karl.kangur@exwzd.com>
+* Merge pull request `#24 <https://github.com/mikeferguson/moveit_python/issues/24>`_ from v4hn/pr-master-python3
+  python3 compatible API & syntax
+* python3 compatible API & syntax
+* Contributors: Karl Kangur, Michael Ferguson, v4hn
+
 0.3.3 (2019-11-21)
 ------------------
 * add sphere to planning scene interface
