@@ -2,8 +2,8 @@
 Changelog for package moveit_python
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.3.4 (2020-04-22)
+------------------
 * Fixed error message when removing attached object. (`#25 <https://github.com/mikeferguson/moveit_python/issues/25>`_)
   Co-authored-by: Karl Kangur <karl.kangur@exwzd.com>
 * Merge pull request `#24 <https://github.com/mikeferguson/moveit_python/issues/24>`_ from v4hn/pr-master-python3
