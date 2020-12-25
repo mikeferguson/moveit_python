@@ -2,6 +2,11 @@
 Changelog for package moveit_python
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* update package.xml for python3 support
+* Contributors: Michael Ferguson
+
 0.3.5 (2020-12-25)
 ------------------
 * use "is None"
