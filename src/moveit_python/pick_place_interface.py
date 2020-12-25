@@ -260,10 +260,10 @@ class PickPlaceInterface(object):
                 rospy.logerr("Pick failed in the planning stage, try again...")
                 rospy.sleep(0.5)  # short sleep to try and let state settle a bit?
                 continue
-            elif scene and \
-                pick_result.error_code.val == MoveItErrorCodes.CONTROL_FAILED or \
+            elif not scene == None and \
+                (pick_result.error_code.val == MoveItErrorCodes.CONTROL_FAILED or \
                 pick_result.error_code.val == MoveItErrorCodes.MOTION_PLAN_INVALIDATED_BY_ENVIRONMENT_CHANGE or \
-                pick_result.error_code.val == MoveItErrorCodes.TIMED_OUT:
+                pick_result.error_code.val == MoveItErrorCodes.TIMED_OUT):
                 rospy.logerr("Pick failed during execution, attempting to cleanup.")
                 if name in scene.getKnownAttachedObjects():
                     rospy.loginfo("Pick managed to grab object, retreat must have failed, continuing anyways")
@@ -298,10 +298,10 @@ class PickPlaceInterface(object):
                 rospy.logerr("Place failed in planning stage, try again...")
                 rospy.sleep(0.5)  # short sleep to let state settle a bit?
                 continue
-            elif scene and \
-                 place_result.error_code.val == MoveItErrorCodes.CONTROL_FAILED or \
+            elif not scene == None and \
+                 (place_result.error_code.val == MoveItErrorCodes.CONTROL_FAILED or \
                  place_result.error_code.val == MoveItErrorCodes.MOTION_PLAN_INVALIDATED_BY_ENVIRONMENT_CHANGE or \
-                 place_result.error_code.val == MoveItErrorCodes.TIMED_OUT:
+                 place_result.error_code.val == MoveItErrorCodes.TIMED_OUT):
                 rospy.logerr("Place failed during execution, attempting to cleanup.")
                 if name in scene.getKnownAttachedObjects():
                     rospy.loginfo("Place did not place object, approach must have failed, will retry...")
