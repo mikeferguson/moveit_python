@@ -260,7 +260,7 @@ class PickPlaceInterface(object):
                 rospy.logerr("Pick failed in the planning stage, try again...")
                 rospy.sleep(0.5)  # short sleep to try and let state settle a bit?
                 continue
-            elif not scene == None and \
+            elif not scene is None and \
                 (pick_result.error_code.val == MoveItErrorCodes.CONTROL_FAILED or \
                 pick_result.error_code.val == MoveItErrorCodes.MOTION_PLAN_INVALIDATED_BY_ENVIRONMENT_CHANGE or \
                 pick_result.error_code.val == MoveItErrorCodes.TIMED_OUT):
@@ -298,7 +298,7 @@ class PickPlaceInterface(object):
                 rospy.logerr("Place failed in planning stage, try again...")
                 rospy.sleep(0.5)  # short sleep to let state settle a bit?
                 continue
-            elif not scene == None and \
+            elif not scene is None and \
                  (place_result.error_code.val == MoveItErrorCodes.CONTROL_FAILED or \
                  place_result.error_code.val == MoveItErrorCodes.MOTION_PLAN_INVALIDATED_BY_ENVIRONMENT_CHANGE or \
                  place_result.error_code.val == MoveItErrorCodes.TIMED_OUT):
