@@ -2,8 +2,8 @@
 Changelog for package moveit_python
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.3.6 (2020-12-25)
+------------------
 * update package.xml for python3 support
 * Contributors: Michael Ferguson
 
