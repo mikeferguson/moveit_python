@@ -2,8 +2,8 @@
 Changelog for package moveit_python
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.3.5 (2020-12-25)
+------------------
 * use "is None"
 * Fixed a comparison and logical statement order issue. (`#26 <https://github.com/mikeferguson/moveit_python/issues/26>`_)
 * fix pyassimp indices bug (`#27 <https://github.com/mikeferguson/moveit_python/issues/27>`_)
