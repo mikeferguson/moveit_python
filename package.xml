@@ -1,4 +1,5 @@
-<package>
+<?xml version="1.0"?>
+<package format="3">
 
   <name>moveit_python</name>
   <version>0.3.5</version>
@@ -12,12 +13,13 @@
   
   <buildtool_depend>catkin</buildtool_depend>
 
-  <run_depend>actionlib</run_depend>
-  <run_depend>geometry_msgs</run_depend>
-  <run_depend>moveit_msgs</run_depend>
-  <run_depend>python-pyassimp</run_depend>
-  <run_depend>rospy</run_depend>
-  <run_depend>shape_msgs</run_depend>
-  <run_depend>tf</run_depend>
+  <exec_depend>actionlib</exec_depend>
+  <exec_depend>geometry_msgs</exec_depend>
+  <exec_depend>moveit_msgs</exec_depend>
+  <exec_depend condition="$ROS_PYTHON_VERSION == 2">python-pyassimp</exec_depend>
+  <exec_depend condition="$ROS_PYTHON_VERSION == 3">python3-pyassimp</exec_depend>
+  <exec_depend>rospy</exec_depend>
+  <exec_depend>shape_msgs</exec_depend>
+  <exec_depend>tf</exec_depend>
 
 </package>
