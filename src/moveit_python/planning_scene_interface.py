@@ -1,4 +1,4 @@
-# Copyright 2011-2019, Michael Ferguson
+# Copyright 2011-2021, Michael Ferguson
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -40,6 +40,11 @@ except:
         # In 16.04, pyassimp is busted
         # https://bugs.launchpad.net/ubuntu/+source/assimp/+bug/1589949
         use_pyassimp = False
+
+try:
+    basestring
+except NameError:
+    basestring = str
 
 from geometry_msgs.msg import Pose, PoseStamped, Point
 from moveit_msgs.msg import CollisionObject, AttachedCollisionObject
