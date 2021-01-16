@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2014, Michael Ferguson
+# Copyright 2014-2021, Michael Ferguson
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -43,7 +43,7 @@ if __name__ == "__main__":
     else:
         filename = "scene.saved"
 
-    scene = pickle.load(open(filename, "r"))
+    scene = pickle.load(open(filename, "rb"))
     scene.scene.is_diff = True
     pub.publish(scene.scene)
     rospy.sleep(5)
