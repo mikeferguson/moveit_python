@@ -2,8 +2,8 @@
 Changelog for package moveit_python
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.4.0 (2021-01-17)
+------------------
 * various fixes for noetic/python3 (`#28 <https://github.com/mikeferguson/moveit_python/issues/28>`_)
 * Contributors: Michael Ferguson
 
