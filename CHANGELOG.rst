@@ -2,6 +2,11 @@
 Changelog for package moveit_python
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* various fixes for noetic/python3 (`#28 <https://github.com/mikeferguson/moveit_python/issues/28>`_)
+* Contributors: Michael Ferguson
+
 0.3.6 (2020-12-25)
 ------------------
 * update package.xml for python3 support
