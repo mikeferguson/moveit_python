@@ -2,6 +2,11 @@
 Changelog for package moveit_python
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* add support for objects not in fixed_frame
+* Contributors: Michael Ferguson
+
 0.4.0 (2021-01-17)
 ------------------
 * various fixes for noetic/python3 (`#28 <https://github.com/mikeferguson/moveit_python/issues/28>`_)
