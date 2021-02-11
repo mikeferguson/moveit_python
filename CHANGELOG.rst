@@ -2,8 +2,8 @@
 Changelog for package moveit_python
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.4.1 (2021-02-11)
+------------------
 * add support for objects not in fixed_frame
 * Contributors: Michael Ferguson
 
