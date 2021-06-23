@@ -289,8 +289,9 @@ class PlanningSceneInterface(object):
 
         self.addSolidPrimitive(name, s, ps.pose, use_service, frame_id)
 
-    ## @brief Insert new Cone into planning scene
-    ## @param radius The radius of the Cone
+    ## @brief Insert new cone into planning scene
+    ## @param height The height of the cone
+    ## @param radius The radius of the cone
     ## @param x The x position in fixed frame
     ## @param y The y position in fixed frame
     ## @param z The z position in fixed frame
@@ -309,7 +310,6 @@ class PlanningSceneInterface(object):
         ps.pose.orientation.w = 1.0
 
         self.addSolidPrimitive(name, s, ps.pose, use_service, frame_id)
-
 
     ## @brief Insert new box into planning scene
     ## @param name Name of the object
