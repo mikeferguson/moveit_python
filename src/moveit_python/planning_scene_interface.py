@@ -289,6 +289,28 @@ class PlanningSceneInterface(object):
 
         self.addSolidPrimitive(name, s, ps.pose, use_service, frame_id)
 
+    ## @brief Insert new Cone into planning scene
+    ## @param radius The radius of the Cone
+    ## @param x The x position in fixed frame
+    ## @param y The y position in fixed frame
+    ## @param z The z position in fixed frame
+    ## @param use_service If true, update will be sent via apply service
+    ## @param frame_id Optional frame for the pose, otherwise fixed_frame is used
+    def addCone(self, name, height, radius, x, y, z, use_service=True, frame_id=None):
+        s = SolidPrimitive()
+        s.dimensions = [height, radius]
+        s.type = s.CONE
+
+        ps = PoseStamped()
+        ps.header.frame_id = self._fixed_frame
+        ps.pose.position.x = x
+        ps.pose.position.y = y
+        ps.pose.position.z = z
+        ps.pose.orientation.w = 1.0
+
+        self.addSolidPrimitive(name, s, ps.pose, use_service, frame_id)
+
+
     ## @brief Insert new box into planning scene
     ## @param name Name of the object
     ## @param size_x The x-dimensions size of the box
