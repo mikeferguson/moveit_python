@@ -311,7 +311,7 @@ class PlanningSceneInterface(object):
         ps.pose.position.z = z
         ps.pose.orientation.w = 1.0
 
-        self.addSolidPrimitive(name, s, ps.pose, use_service)
+        self.addSolidPrimitive(name, s, ps.pose, use_service, frame_id)
 
     ## @brief Attach a box into the planning scene
     ## @param name Name of the object
