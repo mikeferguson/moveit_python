@@ -2,6 +2,13 @@
 Changelog for package moveit_python
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* New cone primitive and box primitive frame fix (`#30 <https://github.com/mikeferguson/moveit_python/issues/30>`_)
+  * Box primitive frame independent of planning scene
+  * Added cone solid primitive
+* Contributors: Kiran Prasad
+
 0.4.1 (2021-02-11)
 ------------------
 * add support for objects not in fixed_frame
