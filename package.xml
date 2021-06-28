@@ -2,7 +2,7 @@
 <package format="3">
 
   <name>moveit_python</name>
-  <version>0.4.1</version>
+  <version>0.4.2</version>
   <description>
     A pure-python interaface to the MoveIt! ROS API.
   </description>
