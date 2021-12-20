@@ -77,6 +77,7 @@ class PickPlaceInterface(object):
     def pickup(self, name, grasps, wait=True, **kwargs):
         # Check arguments
         supported_args = ("allow_gripper_support_collision",
+                          "attached_object_touch_links",
                           "allowed_touch_objects",
                           "plan_only",
                           "planner_id",
