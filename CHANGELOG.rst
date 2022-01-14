@@ -2,8 +2,8 @@
 Changelog for package moveit_python
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.4.3 (2022-01-14)
+------------------
 * fix: Add `attached_object_touch_links` to pickup (`#31 <https://github.com/mikeferguson/moveit_python/issues/31>`_)
 * Contributors: Kai Waelti
 
