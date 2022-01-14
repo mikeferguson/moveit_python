@@ -2,6 +2,11 @@
 Changelog for package moveit_python
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* fix: Add `attached_object_touch_links` to pickup (`#31 <https://github.com/mikeferguson/moveit_python/issues/31>`_)
+* Contributors: Kai Waelti
+
 0.4.2 (2021-06-28)
 ------------------
 * New cone primitive and box primitive frame fix (`#30 <https://github.com/mikeferguson/moveit_python/issues/30>`_)
