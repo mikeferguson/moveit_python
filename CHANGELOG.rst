@@ -2,8 +2,8 @@
 Changelog for package moveit_python
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.4.4 (2022-12-23)
+------------------
 * use setuptools (`#33 <https://github.com/mikeferguson/moveit_python/issues/33>`_)
   setup from distutils is deprecated and will be removed eventually.
   It already breaks on Debian testing.
