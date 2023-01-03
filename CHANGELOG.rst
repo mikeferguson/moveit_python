@@ -2,6 +2,11 @@
 Changelog for package moveit_python
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* fix CI after adding setup tools dependency
+* Contributors: Michael Ferguson
+
 0.4.4 (2022-12-23)
 ------------------
 * use setuptools (`#33 <https://github.com/mikeferguson/moveit_python/issues/33>`_)
